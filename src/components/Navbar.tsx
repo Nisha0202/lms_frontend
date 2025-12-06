@@ -11,7 +11,7 @@ export default function Navbar() {
   return (
     // 1. GLASSMORPHISM HEADER: Sticky, semi-transparent white/gray with blur
     <nav className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white backdrop-blur-md">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
         <div className="flex h-16 items-center justify-between">
           
           {/* LOGO SECTION */}
