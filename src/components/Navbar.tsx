@@ -2,120 +2,161 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, BookOpen, User, LogOut, LayoutDashboard } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout, isAuthenticated } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className=" bg-gray-50 text-sm shadow-sm sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <Link href="/" className="text-md font-semibold text-gray-800">
-            LMS Platform
-          </Link>
+    // 1. GLASSMORPHISM HEADER: Sticky, semi-transparent white/gray with blur
+    <nav className="sticky top-0 z-50 w-full border-b border-zinc-200 bg-white backdrop-blur-md">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          
+          {/* LOGO SECTION */}
+          <div className="shrink-0 flex items-center gap-2">
+            <div className="bg-zinc-900 text-white p-1.5 rounded-lg">
+              <BookOpen size={16} />
+            </div>
+            <Link href="/" className="text-lg font-bold tracking-tight text-zinc-900 hover:text-zinc-700 transition">
+              Course<span className="text-zinc-500 font-normal">Master</span>
+            </Link>
+          </div>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center space-x-4">
-            <Link href="/courses" className="text-gray-600 hover:text-blue-600">
+          {/* DESKTOP LINKS */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link 
+              href="/courses" 
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors duration-200"
+            >
               Browse Courses
             </Link>
 
             {!isAuthenticated ? (
-              <>
+              // GUEST STATE
+              <div className="flex items-center gap-4">
                 <Link 
-                  href="/auth/login" 
-                  className="px-4 py-2 text-gray-700 hover:text-blue-600 font-medium"
+                  href="/signin" 
+                  className="text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
                 >
-                  Login
+                  Log in
                 </Link>
                 <Link 
-                  href="/auth/register" 
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                  href="/register" 
+                  className="rounded-full bg-zinc-900 px-5 py-2 text-sm font-medium text-white transition-transform hover:bg-zinc-800 hover:scale-105 active:scale-95"
                 >
-                  Register
+                  Get Started
                 </Link>
-              </>
+              </div>
             ) : (
-              <>
-                {user?.role === 'admin' ? (
-                  <Link href="/admin/dashboard" className="text-gray-600 hover:text-blue-600 font-medium">
-                    Admin Dashboard
-                  </Link>
-                ) : (
-                  <Link href="/student/dashboard" className="text-gray-600 hover:text-blue-600 font-medium">
-                    My Learning
-                  </Link>
-                )}
-                <div className="flex items-center gap-4 ml-4 pl-4 border-l border-gray-200">
-                  <span className="text-sm font-semibold text-gray-800">
-                    {user?.name}
-                  </span>
+              // LOGGED IN STATE
+              <div className="flex items-center gap-6">
+                {/* Dashboard Link */}
+                <Link 
+                  href={user?.role === 'admin' ? "/admin/dashboard" : "/student/dashboard"}
+                  className="flex items-center gap-2 text-sm font-medium text-zinc-600 hover:text-zinc-900 transition-colors"
+                >
+                  <LayoutDashboard size={16} />
+                  <span>Dashboard</span>
+                </Link>
+
+                {/* Divider */}
+                <div className="h-6 w-px bg-zinc-200"></div>
+
+                {/* User Profile Area */}
+                <div className="flex items-center gap-3">
+                  <div className="text-right hidden lg:block">
+                    <p className="text-sm font-semibold text-zinc-900 leading-none">{user?.name}</p>
+                    <p className="text-xs text-zinc-500 uppercase tracking-wider">{user?.role}</p>
+                  </div>
+                  
+                  {/* User Avatar Placeholder */}
+                  <div className="h-8 w-8 rounded-full bg-zinc-100 border border-zinc-200 flex items-center justify-center text-zinc-600">
+                    <User size={16} />
+                  </div>
+
                   <button
                     onClick={logout}
-                    className="text-sm text-red-500 hover:text-red-700 font-medium"
+                    className="p-2 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-full transition-all"
+                    title="Logout"
                   >
-                    Logout
+                    <LogOut size={18} />
                   </button>
                 </div>
-              </>
+              </div>
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          {/* MOBILE MENU BUTTON */}
+          <div className="md:hidden">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-800 hover:text-blue-600 focus:outline-none"
+              className="p-2 text-zinc-600 hover:bg-zinc-100 rounded-md transition"
             >
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        {isOpen && (
-          <div className="md:hidden mt-2 space-y-2 pb-4 border-b border-gray-200">
-            <Link href="/courses" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-              Browse Courses
-            </Link>
-
-            {!isAuthenticated ? (
-              <>
-                <Link href="/auth/login" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-                  Login
-                </Link>
-                <Link href="/auth/register" className="block px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
-                  Register
-                </Link>
-              </>
-            ) : (
-              <>
-                {user?.role === 'admin' ? (
-                  <Link href="/admin/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-                    Admin Dashboard
-                  </Link>
-                ) : (
-                  <Link href="/student/dashboard" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">
-                    My Learning
-                  </Link>
-                )}
-                <div className="px-4 py-2 border-t border-gray-200 flex items-center justify-between">
-                  <span className="text-sm font-semibold text-gray-800">{user?.name}</span>
-                  <button
-                    onClick={logout}
-                    className="text-sm text-red-500 hover:text-red-700 font-medium"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        )}
       </div>
+
+      {/* MOBILE MENU DROPDOWN */}
+      {/* Added subtle animation classes for smoothness */}
+      {isOpen && (
+        <div className="md:hidden border-t border-zinc-200 bg-white px-4 py-6 space-y-4 shadow-lg animate-in slide-in-from-top-2">
+          <Link 
+            href="/courses" 
+            className="block text-base font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50 px-3 py-2 rounded-md"
+            onClick={() => setIsOpen(false)}
+          >
+            Browse Courses
+          </Link>
+
+          {!isAuthenticated ? (
+            <div className="space-y-3 pt-4 border-t border-zinc-100">
+              <Link 
+                href="/signin" 
+                className="block w-full text-center text-zinc-600 font-medium py-2 hover:bg-zinc-50 rounded-md"
+                onClick={() => setIsOpen(false)}
+              >
+                Log in
+              </Link>
+              <Link 
+                href="/register" 
+                className="block w-full text-center bg-zinc-900 text-white font-medium py-2.5 rounded-lg hover:bg-zinc-800"
+                onClick={() => setIsOpen(false)}
+              >
+                Sign up
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-1 pt-4 border-t border-zinc-100">
+              <div className="px-3 py-2">
+                <p className="text-sm font-bold text-zinc-900">{user?.name}</p>
+                <p className="text-xs text-zinc-500">{user?.email}</p>
+              </div>
+              <Link 
+                href={user?.role === 'admin' ? "/admin/dashboard" : "/student/dashboard"}
+                className="flex items-center gap-3 px-3 py-2 text-zinc-600 hover:bg-zinc-50 rounded-md"
+                onClick={() => setIsOpen(false)}
+              >
+                <LayoutDashboard size={18} />
+                Dashboard
+              </Link>
+              <button
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center gap-3 px-3 py-2 text-red-600 hover:bg-red-50 rounded-md transition"
+              >
+                <LogOut size={18} />
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </nav>
   );
 }

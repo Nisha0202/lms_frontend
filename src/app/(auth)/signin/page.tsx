@@ -2,11 +2,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
-import { ArrowRight, Lock, Mail, User, Loader2 } from 'lucide-react';
+import { ArrowRight, Lock, Mail, Loader2 } from 'lucide-react';
 
-export default function RegisterPage() {
-  const { register } = useAuth();
-  const [name, setName] = useState('');
+export default function LoginPage() {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,58 +16,38 @@ export default function RegisterPage() {
     setLoading(true);
     setError('');
     try {
-      await register(name, email, password);
+      await login(email, password);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || 'Invalid email or password.');
     } finally {
       setLoading(false);
     }
   };
 
   return (
+    // 1. BACKGROUND: Clean Zinc-50 background for contrast
     <div className="flex min-h-[90vh] flex-col items-center justify-center bg-zinc-50 px-2 py-12 sm:px-6 lg:px-8">
       
-      {/* Header Branding */}
+      {/* 2. HEADER: Branding above the form */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8">
         <h2 className="text-3xl font-bold tracking-tight text-zinc-900">
-          Create an account
+          Welcome back
         </h2>
         <p className="mt-2 text-sm text-zinc-600">
-          Join thousands of students learning on our platform
+          Sign in to your account to continue learning
         </p>
       </div>
 
-      {/* Main Card */}
+      {/* 3. CARD: White background, subtle border, soft shadow */}
       <div className="w-full max-w-md bg-white px-8 py-10 shadow-sm ring-1 ring-zinc-900/5 sm:rounded-xl">
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           
-          {/* Error Message */}
+          {/* Error Alert */}
           {error && (
             <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-100 flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
               <span className="font-medium">Error:</span> {error}
             </div>
           )}
-
-          {/* Name Input */}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium leading-6 text-zinc-900">
-              Full Name
-            </label>
-            <div className="relative mt-2">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <User className="h-5 w-5 text-zinc-400" />
-              </div>
-              <input
-                id="name"
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="block w-full rounded-md border-0 py-2.5 pl-10 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-900 sm:text-sm sm:leading-6 transition-all"
-                placeholder="John Doe"
-              />
-            </div>
-          </div>
 
           {/* Email Input */}
           <div>
@@ -93,9 +72,14 @@ export default function RegisterPage() {
 
           {/* Password Input */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium leading-6 text-zinc-900">
-              Password
-            </label>
+            <div className="flex items-center justify-between">
+              <label htmlFor="password" className="block text-sm font-medium leading-6 text-zinc-900">
+                Password
+              </label>
+              <Link href="#" className="text-sm font-semibold text-zinc-600 hover:text-zinc-900">
+                Forgot password?
+              </Link>
+            </div>
             <div className="relative mt-2">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
                 <Lock className="h-5 w-5 text-zinc-400" />
@@ -110,25 +94,22 @@ export default function RegisterPage() {
                 placeholder="••••••••"
               />
             </div>
-            <p className="mt-2 text-xs text-zinc-500">
-              Must be at least 6 characters long.
-            </p>
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full justify-center items-center gap-2 rounded-md bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-6"
+            className="flex w-full justify-center items-center gap-2 rounded-md bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
           >
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Creating account...
+                Signing in...
               </>
             ) : (
               <>
-                Create account <ArrowRight className="h-4 w-4" />
+                Sign in <ArrowRight className="h-4 w-4" />
               </>
             )}
           </button>
@@ -136,9 +117,9 @@ export default function RegisterPage() {
 
         {/* Footer Link */}
         <p className="mt-8 text-center text-sm text-zinc-500">
-          Already have an account?{' '}
-          <Link href="/login" className="font-semibold text-zinc-900 hover:underline hover:text-zinc-700 transition">
-            Sign in here
+          Not a member?{' '}
+          <Link href="/register" className="font-semibold text-zinc-900 hover:underline hover:text-zinc-700 transition">
+            Register
           </Link>
         </p>
       </div>
