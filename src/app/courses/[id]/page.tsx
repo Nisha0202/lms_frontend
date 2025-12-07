@@ -2,13 +2,15 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Calendar, Users, PlayCircle, FileText, CheckCircle2, Lock } from "lucide-react";
 import EnrollmentButton from "@/components/EnrollmentButton"; // We will create this small helper
+import { useAuth } from "@/hooks/useAuth";
 
 // Helper to format currency
-const formatPrice = (price: number) => 
+const formatPrice = (price: number) =>
   new Intl.NumberFormat('en-BD', { style: 'currency', currency: 'BDT' }).format(price);
 
 export default async function CourseDetails(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
+  const { user, logout, isAuthenticated } = useAuth();
 
   // Fetch Data
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/courses/${id}`, {
@@ -21,12 +23,12 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
   return (
     <div className="min-h-screen bg-zinc-50 py-12 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
-        
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
           {/* ================= LEFT COLUMN (Content) ================= */}
           <div className="lg:col-span-2 space-y-10">
-            
+
             {/* 1. Header Section */}
             <div className="space-y-4">
               <span className="inline-flex items-center rounded-md bg-zinc-100 px-2.5 py-1 text-xs font-medium text-zinc-600 ring-1 ring-inset ring-zinc-500/10">
@@ -38,7 +40,7 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
               <p className="text-lg text-zinc-600 leading-relaxed">
                 {course.description}
               </p>
-              
+
               {/* Instructor Mini-Profile */}
               <div className="flex items-center gap-3 pt-4 border-t border-zinc-200">
                 <div className="h-10 w-10 rounded-full bg-zinc-200 flex items-center justify-center text-zinc-500 font-bold">
@@ -94,12 +96,12 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
           {/* ================= RIGHT COLUMN (Sticky Sidebar) ================= */}
           <div className="relative">
             <div className="sticky top-24 space-y-6">
-              
+
               {/* Main Action Card */}
               <div className="bg-white rounded-2xl border border-zinc-200 shadow-lg overflow-hidden">
                 {/* Thumbnail */}
                 <div className="relative h-48 w-full bg-zinc-900">
-                   <Image
+                  <Image
                     src={course.thumbnail}
                     alt={course.title}
                     fill
@@ -119,11 +121,13 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
 
                   {/* Batch Selection & Enroll Button */}
                   {/* We extract this to a Client Component because it needs useState */}
-                  <EnrollmentButton 
-                    courseId={course._id} 
-                    batches={course.batches} 
+                  {user?.role === 'admin' &&
+                  <EnrollmentButton
+                    courseId={course._id}
+                    batches={course.batches}
                   />
-                  
+}
+
                   {/* Guarantee Text */}
                   <p className="text-xs text-center text-zinc-400">
                     30-Day Money-Back Guarantee • Full Lifetime Access
@@ -135,18 +139,18 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
               <div className="bg-white rounded-xl border border-zinc-200 p-5 shadow-sm space-y-4">
                 <h3 className="font-semibold text-zinc-900 text-sm">This course includes:</h3>
                 <ul className="space-y-3 text-sm text-zinc-600">
-                   <li className="flex items-center gap-3">
-                     <PlayCircle size={18} className="text-zinc-400" />
-                     {course.lessons.length} video lessons
-                   </li>
-                   <li className="flex items-center gap-3">
-                     <FileText size={18} className="text-zinc-400" />
-                     Assignments & Quizzes
-                   </li>
-                   <li className="flex items-center gap-3">
-                     <Users size={18} className="text-zinc-400" />
-                     Access on mobile and TV
-                   </li>
+                  <li className="flex items-center gap-3">
+                    <PlayCircle size={18} className="text-zinc-400" />
+                    {course.lessons.length} video lessons
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <FileText size={18} className="text-zinc-400" />
+                    Assignments & Quizzes
+                  </li>
+                  <li className="flex items-center gap-3">
+                    <Users size={18} className="text-zinc-400" />
+                    Access on mobile and TV
+                  </li>
                 </ul>
               </div>
 

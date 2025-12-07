@@ -10,6 +10,7 @@ const categories = [
   "Marketing",
   "Business",
   "Data Science",
+  "Web Development",
 ];
 
 export default function CourseFilters({
