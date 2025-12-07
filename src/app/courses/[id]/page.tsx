@@ -1,8 +1,9 @@
+
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Calendar, Users, PlayCircle, FileText, CheckCircle2, Lock } from "lucide-react";
 import EnrollmentButton from "@/components/EnrollmentButton"; // We will create this small helper
-import { useAuth } from "@/hooks/useAuth";
+
 
 // Helper to format currency
 const formatPrice = (price: number) =>
@@ -10,7 +11,7 @@ const formatPrice = (price: number) =>
 
 export default async function CourseDetails(props: { params: Promise<{ id: string }> }) {
   const { id } = await props.params;
-  const { user, logout, isAuthenticated } = useAuth();
+
 
   // Fetch Data
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api'}/courses/${id}`, {
@@ -121,12 +122,12 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
 
                   {/* Batch Selection & Enroll Button */}
                   {/* We extract this to a Client Component because it needs useState */}
-                  {user?.role === 'admin' &&
+                 
                   <EnrollmentButton
                     courseId={course._id}
                     batches={course.batches}
                   />
-}
+
 
                   {/* Guarantee Text */}
                   <p className="text-xs text-center text-zinc-400">

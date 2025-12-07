@@ -15,12 +15,22 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
 
   const handleEnroll = async () => {
     setError("");
-    
+
+   
+
     // 1. Validation
     if (!isAuthenticated) {
       router.push("/signin?redirect=/courses/${courseId}");
       return;
     }
+
+ // hide it for Admins
+    if (isAuthenticated && user?.role === 'admin') {
+     
+        setError("You are an Admin. (Enrollment disabled)");
+       return;
+    }
+
     if (!selectedBatch) {
       setError("Please select a batch to continue.");
       return;
@@ -57,14 +67,13 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
         <label className="text-sm font-medium text-zinc-900">Choose a Batch</label>
         <div className="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
           {batches.map((batch) => (
-            <div 
+            <div
               key={batch._id}
               onClick={() => setSelectedBatch(batch._id)}
-              className={`cursor-pointer border rounded-lg p-3 text-sm transition-all ${
-                selectedBatch === batch._id 
-                  ? "border-zinc-900 bg-zinc-50 ring-1 ring-zinc-900" 
+              className={`cursor-pointer border rounded-lg p-3 text-sm transition-all ${selectedBatch === batch._id
+                  ? "border-zinc-900 bg-zinc-50 ring-1 ring-zinc-900"
                   : "border-zinc-200 hover:border-zinc-400"
-              }`}
+                }`}
             >
               <div className="flex justify-between font-medium text-zinc-900">
                 <span>{batch.name}</span>
@@ -84,7 +93,7 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
       {/* Error Message */}
       {error && (
         <div className="text-sm text-red-600 bg-red-50 p-2 rounded flex items-center gap-2">
-           <AlertCircle size={14} /> {error}
+          <AlertCircle size={14} /> {error}
         </div>
       )}
 
