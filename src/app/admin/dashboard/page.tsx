@@ -3,12 +3,15 @@ import Image from "next/image";
 import { Plus, BookOpen, Users, DollarSign, ArrowRight } from "lucide-react";
 import DashboardActions from "@/components/DashboardActions";
 
-// Fetch Data on the Server
-async function getDashboardData() {
+// ====================== FETCH FUNCTION ======================
+async function getDashboardData(page: number) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
-  
+
   try {
-    const res = await fetch(`${apiUrl}/courses?limit=100`, { cache: "no-store" });
+    const res = await fetch(`${apiUrl}/courses?limit=10&page=${page}`, {
+      cache: "no-store",
+    });
+
     if (!res.ok) throw new Error("Failed to fetch");
     return await res.json();
   } catch (error) {
@@ -16,19 +19,31 @@ async function getDashboardData() {
   }
 }
 
-export default async function AdminDashboard() {
-  const { courses, total } = await getDashboardData();
+interface Props {
+  searchParams?: { page?: string };
+}
+
+export default async function AdminDashboard({ searchParams }: Props) {
+  const page = Number(searchParams?.page || 1);
+
+  const { courses, total } = await getDashboardData(page);
+  const limit = 10;
+  const totalPages = Math.ceil(total / limit);
 
   return (
     <div className="min-h-screen bg-zinc-50 py-10 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto space-y-8">
-        
         {/* ================= HEADER ================= */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">Dashboard</h1>
-            <p className="text-zinc-500 text-sm">Welcome back, Admin. Here is what's happening today.</p>
+            <h1 className="text-2xl font-bold text-zinc-900 tracking-tight">
+              Dashboard
+            </h1>
+            <p className="text-zinc-500 text-sm">
+              Welcome back, Admin. Here is what's happening today.
+            </p>
           </div>
+
           <Link
             href="/admin/create-course"
             className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition-all shadow-sm active:scale-95"
@@ -40,8 +55,6 @@ export default async function AdminDashboard() {
 
         {/* ================= STATS CARDS ================= */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          
-          {/* Card 1: Total Courses */}
           <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-zinc-500">Total Courses</p>
@@ -52,7 +65,6 @@ export default async function AdminDashboard() {
             </div>
           </div>
 
-          {/* Card 2: Total Students (Placeholder for now) */}
           <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-zinc-500">Total Students</p>
@@ -63,7 +75,6 @@ export default async function AdminDashboard() {
             </div>
           </div>
 
-          {/* Card 3: Revenue (Placeholder) */}
           <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between">
             <div>
               <p className="text-sm font-medium text-zinc-500">Total Revenue</p>
@@ -75,11 +86,14 @@ export default async function AdminDashboard() {
           </div>
         </div>
 
-        {/* ================= COURSE LIST TABLE ================= */}
+        {/* ================= COURSE TABLE ================= */}
         <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
           <div className="px-6 py-4 border-b border-zinc-100 flex items-center justify-between bg-zinc-50/50">
             <h2 className="font-semibold text-zinc-900">Recent Courses</h2>
-            <Link href="/courses" className="text-sm text-zinc-500 hover:text-zinc-900 flex items-center gap-1">
+            <Link
+              href="/courses"
+              className="text-sm text-zinc-500 hover:text-zinc-900 flex items-center gap-1"
+            >
               View all <ArrowRight size={14} />
             </Link>
           </div>
@@ -115,18 +129,23 @@ export default async function AdminDashboard() {
                           </div>
                           <div>
                             <p className="font-medium text-zinc-900 line-clamp-1">{course.title}</p>
-                            <p className="text-xs text-zinc-500">{course.lessons?.length || 0} Lessons</p>
+                            <p className="text-xs text-zinc-500">
+                              {course.lessons?.length || 0} Lessons
+                            </p>
                           </div>
                         </div>
                       </td>
+
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-zinc-100 text-zinc-600 border border-zinc-200">
                           {course.category}
                         </span>
                       </td>
+
                       <td className="px-6 py-4 font-medium text-zinc-900">
                         ৳ {course.price}
                       </td>
+
                       <td className="px-6 py-4 text-right">
                         <DashboardActions courseId={course._id} />
                       </td>
@@ -138,6 +157,32 @@ export default async function AdminDashboard() {
           )}
         </div>
 
+        {/* ================= PAGINATION ================= */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-3 py-6">
+            {page > 1 && (
+              <Link
+                href={`/admin?page=${page - 1}`}
+                className="px-4 py-2 text-sm bg-zinc-200 rounded hover:bg-zinc-300"
+              >
+                Previous
+              </Link>
+            )}
+
+            <div className="text-sm text-zinc-700">
+              Page {page} of {totalPages}
+            </div>
+
+            {page < totalPages && (
+              <Link
+                href={`/admin?page=${page + 1}`}
+                className="px-4 py-2 text-sm bg-zinc-200 rounded hover:bg-zinc-300"
+              >
+                Next
+              </Link>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
