@@ -1,8 +1,8 @@
-'use client'
+
 import Image from "next/image";
 import Link from "next/link";
 import { Tag, ArrowRight } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+
 
 interface CourseProps {
   _id: string;
@@ -14,8 +14,8 @@ interface CourseProps {
 }
 
 export default function CourseCard({ course }: { course: CourseProps }) {
-  const { user } = useAuth();
-  const isAdmin = user?.role === "admin";
+  // const { user } = useAuth();
+  // const isAdmin = user?.role === "admin";
 
   return (
     <div className="group flex flex-col h-full bg-white rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 overflow-hidden">
@@ -60,14 +60,10 @@ export default function CourseCard({ course }: { course: CourseProps }) {
         {/* Action Button */}
         <div className="mt-auto pt-2">
           <Link
-            href={
-              isAdmin
-                ? `/admin/create-course${course._id}`
-                : `/courses/${course._id}`
-            }
+            href={`/courses/${course._id}`}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
           >
-            {isAdmin ? "Edit Details" : "View Details"}  
+            View Details  
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
