@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { Calendar, Users, Loader2, AlertCircle } from "lucide-react";
+import { Calendar, Users, Loader2, AlertCircle, Edit, ShieldCheck } from "lucide-react";
+import Link from "next/link"; // Import Link for navigation
 import api from "@/lib/api";
 
 export default function EnrollmentButton({ courseId, batches }: { courseId: string, batches: any[] }) {
@@ -13,22 +14,38 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
 
+  // ==========================================
+  // 1. ADMIN VIEW: Show "Edit Course" Button
+  // ==========================================
+  if (isAuthenticated && user?.role === 'admin') {
+    return (
+      <div className="space-y-4">
+        <div className="p-4 bg-zinc-100 rounded-lg border border-zinc-200">
+          <div className="flex items-center gap-2 text-zinc-900 font-semibold mb-2">
+            <ShieldCheck size={18} />
+            <span>Admin Controls</span>
+          </div>
+          <Link 
+            href={`/admin/create-course?edit=${courseId}`} // Or /admin/courses/edit/[id] depending on your route
+            className="flex text-md items-center justify-center gap-2 w-full bg-white border-2 border-zinc-900 text-zinc-900 font-bold  py-3 rounded-xl hover:bg-zinc-50 transition"
+          >
+            <Edit size={18} /> Edit Course
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // ==========================================
+  // 2. STUDENT VIEW: Enrollment Logic
+  // ==========================================
   const handleEnroll = async () => {
     setError("");
 
-   
-
-    // 1. Validation
     if (!isAuthenticated) {
-      router.push("/signin?redirect=/courses/${courseId}");
+      // Redirect to login with a return URL
+      router.push(`/login?redirect=/courses/${courseId}`);
       return;
-    }
-
- // hide it for Admins
-    if (isAuthenticated && user?.role === 'admin') {
-     
-        setError("You are an Admin. (Enrollment disabled)");
-       return;
     }
 
     if (!selectedBatch) {
@@ -36,17 +53,20 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
       return;
     }
 
-    // 2. API Call
     setLoading(true);
     try {
       await api.post("/enrollments/enroll", {
         courseId,
         batchId: selectedBatch
       });
-      // 3. Success Redirect
       router.push("/student/dashboard");
     } catch (err: any) {
-      setError(err.response?.data?.message || "Enrollment failed");
+      // If already enrolled, just take them to the classroom
+      if (err.response?.status === 400 && err.response?.data?.message?.includes("Already enrolled")) {
+         router.push(`/learn/course/${courseId}`);
+      } else {
+         setError(err.response?.data?.message || "Enrollment failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -70,10 +90,11 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
             <div
               key={batch._id}
               onClick={() => setSelectedBatch(batch._id)}
-              className={`cursor-pointer border rounded-lg p-3 text-sm transition-all ${selectedBatch === batch._id
+              className={`cursor-pointer border rounded-lg p-3 text-sm transition-all ${
+                selectedBatch === batch._id
                   ? "border-zinc-900 bg-zinc-50 ring-1 ring-zinc-900"
                   : "border-zinc-200 hover:border-zinc-400"
-                }`}
+              }`}
             >
               <div className="flex justify-between font-medium text-zinc-900">
                 <span>{batch.name}</span>

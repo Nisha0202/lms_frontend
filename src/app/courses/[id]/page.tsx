@@ -3,6 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Calendar, Users, PlayCircle, FileText, CheckCircle2, Lock } from "lucide-react";
 import EnrollmentButton from "@/components/EnrollmentButton"; // We will create this small helper
+import Link from "next/link";
 
 
 // Helper to format currency
@@ -22,7 +23,7 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
   const course = await res.json();
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-12 px-4 sm:px-6">
+    <div className="min-h-screen bg-zinc-50 text-gray-800 py-12 px-4 sm:px-6">
       <div className="max-w-7xl mx-auto">
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -92,6 +93,11 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
                 ))}
               </div>
             </div>
+            
+            <Link href={`/courses/learn/${course._id}`}>start learning</Link>
+            <Link href={`/admin/courses/edit/${course._id}`}>edit course</Link>
+
+
           </div>
 
           {/* ================= RIGHT COLUMN (Sticky Sidebar) ================= */}
