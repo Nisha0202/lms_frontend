@@ -19,7 +19,7 @@ interface AuthResponse {
 interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
-  loading: boolean; // <--- This was missing
+  loading: boolean; 
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
@@ -35,27 +35,39 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // 2. Create the loading state (Start as true)
   const [loading, setLoading] = useState(true); 
 
-  useEffect(() => {
-    // Only run on client
-    if (typeof window !== 'undefined') {
-      const token = localStorage.getItem('token');
-      const storedUser = localStorage.getItem('user');
+useEffect(() => {
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("token");
+    const storedUser = localStorage.getItem("user");
 
-      if (token && storedUser) {
-        try {
-          setUser(JSON.parse(storedUser));
-          setIsAuthenticated(true);
-        } catch {
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-        }
+    if (token && storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+        setIsAuthenticated(true);
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
       }
-      // 3. Mark loading as finished after checking storage
-      setLoading(false);
     }
-  }, []);
+
+    setLoading(false);
+  }
+}, []);
+
+
+useEffect(() => {
+  if (!loading && isAuthenticated && user) {
+    const redirectPath =
+      user.role === "admin" ? "/admin/dashboard" : "/student/dashboard";
+
+    router.replace(redirectPath);
+  }
+}, [loading, isAuthenticated, user, router]);
+
+
 
   const login = async (email: string, password: string) => {
+  try {
     const res = await api.post<AuthResponse>('/auth/login', { email, password });
     const { token, user } = res.data;
 
@@ -68,8 +80,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     setUser(user);
     setIsAuthenticated(true);
+
+    // redirect ONLY after success
     router.push(user.role === 'admin' ? '/admin/dashboard' : '/student/dashboard');
-  };
+  } catch (error: any) {
+    // Throw the error back to LoginPage UI
+    throw error;
+  }
+};
+
 
   const register = async (name: string, email: string, password: string) => {
     const res = await api.post<AuthResponse>('/auth/register', { name, email, password });

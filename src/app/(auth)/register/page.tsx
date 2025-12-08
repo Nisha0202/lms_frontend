@@ -42,7 +42,7 @@ export default function RegisterPage() {
     try {
       await register(name, email, password);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed');
+      setError(err.response?.data?.message || 'Registration failed, You may already have an account.');
     } finally {
       setLoading(false);
     }
@@ -67,7 +67,7 @@ export default function RegisterPage() {
           
           {/* Error Message */}
           {error && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-100 flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
+            <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-100 flex items-start gap-2 animate-in fade-in slide-in-from-top-1">
               <span className="font-medium">Error:</span> {error}
             </div>
           )}
@@ -142,7 +142,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full justify-center items-center gap-2 rounded-md bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-6"
+            className="flex w-full justify-center items-center gap-2 rounded-md bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-6"
           >
             {loading ? (
               <>

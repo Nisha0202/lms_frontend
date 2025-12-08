@@ -24,12 +24,20 @@ api.interceptors.request.use(
 
 // Response interceptor to handle 401
 api.interceptors.response.use(
+
   (response) => response,
   (error) => {
+
+    const originalUrl = error.config?.url;
+    // 1. If the API returning 401 is the login/register request → don't redirect
+    if (originalUrl?.includes('/signin') || originalUrl?.includes('/register')) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/auth/login';
+      window.location.href = '/signin';
     }
     return Promise.reject(error);
   }
