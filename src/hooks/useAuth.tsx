@@ -93,7 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     document.cookie = "adminToken=; path=/; max-age=0;";
     setUser(null);
     setIsAuthenticated(false);
-    router.push('/auth/login');
+    router.push('/');
   };
 
   // 4. Expose 'loading' in the value

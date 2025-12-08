@@ -12,10 +12,33 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  // Validate email format
+  const isValidEmail = (email: string) => {
+    return /\S+@\S+\.\S+/.test(email);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError('');
+
+    // --- 1. Client-Side Validation ---
+    if (!name.trim() || !email.trim() || !password) {
+      setError('All fields are required.');
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.');
+      return;
+    }
+    // ---------------------------------
+
+    setLoading(true);
     try {
       await register(name, email, password);
     } catch (err: any) {
@@ -119,7 +142,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full justify-center items-center gap-2 rounded-md bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800  focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-6"
+            className="flex w-full justify-center items-center gap-2 rounded-md bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all mt-6"
           >
             {loading ? (
               <>
@@ -137,7 +160,7 @@ export default function RegisterPage() {
         {/* Footer Link */}
         <p className="mt-8 text-center text-sm text-zinc-500">
           Already have an account?{' '}
-          <Link href="/login" className="font-semibold text-zinc-900 hover:underline hover:text-zinc-700 transition">
+          <Link href="/signin" className="font-semibold text-zinc-900 hover:underline hover:text-zinc-700 transition">
             Sign in here
           </Link>
         </p>
