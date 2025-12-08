@@ -25,7 +25,7 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
             <ShieldCheck size={18} />
             <span>Admin Controls</span>
           </div>
-          <Link 
+          <Link
             href={`/admin/create-course?edit=${courseId}`} // Or /admin/courses/edit/[id] depending on your route
             className="flex text-md items-center justify-center gap-2 w-full bg-white border-2 border-zinc-900 text-zinc-900 font-bold  py-3 rounded-xl hover:bg-zinc-50 transition"
           >
@@ -63,9 +63,13 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
     } catch (err: any) {
       // If already enrolled, just take them to the classroom
       if (err.response?.status === 400 && err.response?.data?.message?.includes("Already enrolled")) {
-         router.push(`/learn/course/${courseId}`);
+        setError(err.response?.data?.message);
+        setTimeout(() => {
+          router.push(`/learn/course/${courseId}`);
+        }, 1500);
+
       } else {
-         setError(err.response?.data?.message || "Enrollment failed");
+        setError(err.response?.data?.message || "Enrollment failed");
       }
     } finally {
       setLoading(false);
@@ -90,11 +94,10 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
             <div
               key={batch._id}
               onClick={() => setSelectedBatch(batch._id)}
-              className={`cursor-pointer border rounded-lg p-3 text-sm transition-all ${
-                selectedBatch === batch._id
+              className={`cursor-pointer border rounded-lg p-3 text-sm transition-all ${selectedBatch === batch._id
                   ? "border-zinc-900 bg-zinc-50 ring-1 ring-zinc-900"
                   : "border-zinc-200 hover:border-zinc-400"
-              }`}
+                }`}
             >
               <div className="flex justify-between font-medium text-zinc-900">
                 <span>{batch.name}</span>
