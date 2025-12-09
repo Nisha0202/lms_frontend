@@ -6,10 +6,10 @@ import Link from "next/link";
 import api from "@/lib/api";
 import { 
   PlayCircle, FileText, CheckCircle, 
-  ChevronLeft, Menu, X, ClipboardList, Send, Loader2, AlertCircle 
+  ChevronLeft, Menu, X, ClipboardList, Send, Loader2, AlertCircle, Check 
 } from "lucide-react";
 
-// --- Types ---
+// Types
 interface Lesson {
   _id: string;
   title: string;
@@ -36,33 +36,28 @@ export default function LearningPage() {
   const courseId = (params?.courseId || params?.id) as string;
   const router = useRouter();
 
-  // --- State ---
+  // --- Data State ---
   const [course, setCourse] = useState<CourseData | null>(null);
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
   
-  // UI States
+  // --- UI State ---
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(""); 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   
-  // New States for Feedback
-  const [successMessage, setSuccessMessage] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [markingComplete, setMarkingComplete] = useState(false);
-
-  // Assignment States
+  // --- Action States ---
   const [submissionLink, setSubmissionLink] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [markingComplete, setMarkingComplete] = useState(false); // Loading for mark complete
 
-  // Helper to show temporary messages
-  const showSuccess = (msg: string) => {
-    setSuccessMessage(msg);
-    setTimeout(() => setSuccessMessage(""), 3000);
-  };
+  // --- 🔔 Notification State ---
+  const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  const showError = (msg: string) => {
-    setErrorMessage(msg);
-    setTimeout(() => setErrorMessage(""), 3000);
+  // Helper to show notification
+  const showNotification = (message: string, type: 'success' | 'error') => {
+    setNotification({ message, type });
+    // Auto-hide after 3 seconds
+    setTimeout(() => setNotification(null), 3000);
   };
 
   // --- Fetch Data ---
@@ -72,7 +67,7 @@ export default function LearningPage() {
     const fetchContent = async () => {
       try {
         setLoading(true);
-        setError("");
+        setError(""); 
 
         const res = await api.get<LearnApiResponse>(`/learn/course/${courseId}`);
         setCourse(res.data.course);
@@ -83,12 +78,11 @@ export default function LearningPage() {
       } catch (err: any) {
         console.error("Fetch error:", err);
         if (err.response?.status === 403) {
-          alert("You are not enrolled in this course.");
           router.push(`/courses/${courseId}`);
         } else if (err.response?.status === 404) {
            setError("Course content not found.");
         } else {
-           setError("Failed to load course. Please try again later.");
+           setError("Failed to load course.");
         }
       } finally {
         setLoading(false);
@@ -103,27 +97,22 @@ export default function LearningPage() {
     e.preventDefault();
     if (!currentLesson) return;
 
+    // Basic Validation
     if (!submissionLink.trim()) {
-      showError("Please enter your Google Drive link.");
-      return;
-    }
-
-    const driveRegex = /^(https?:\/\/)?(www\.)?(drive\.google\.com|docs\.google\.com)\/.+$/;
-    if (!driveRegex.test(submissionLink.trim())) {
-      showError("Please submit a valid Google Drive link only.");
-      return;
+        showNotification("Please enter a link first.", "error");
+        return;
     }
 
     setSubmitting(true);
     try {
       await api.post("/assessments/submit", {
         lessonId: currentLesson._id,
-        driveLink: submissionLink.trim(),
+        driveLink: submissionLink
       });
-      showSuccess("Assignment submitted successfully!");
+      showNotification("Assignment submitted successfully!", "success");
       setSubmissionLink("");
     } catch (err) {
-      showError("Failed to submit assignment.");
+      showNotification("Failed to submit assignment.", "error");
     } finally {
       setSubmitting(false);
     }
@@ -132,18 +121,18 @@ export default function LearningPage() {
   const markComplete = async () => {
     if (!currentLesson) return;
     
-    setMarkingComplete(true);
+    setMarkingComplete(true); // Start loading spinner on button
     try {
       await api.post("/learn/complete", { 
         courseId, 
         lessonId: currentLesson._id 
       });
-      showSuccess("Lesson marked as complete!");
+      showNotification("Lesson marked as complete!", "success");
     } catch (err) {
       console.error(err);
-      showError("Failed to save progress.");
+      showNotification("Failed to save progress.", "error");
     } finally {
-      setMarkingComplete(false);
+      setMarkingComplete(false); // Stop loading
     }
   };
 
@@ -175,23 +164,28 @@ export default function LearningPage() {
   return (
     <div className="flex h-screen bg-zinc-50 overflow-hidden text-zinc-900 relative">
       
-      {/* --- TOAST NOTIFICATIONS --- */}
-      <div className="fixed top-6 right-6 z-50 flex flex-col gap-2">
-        {successMessage && (
-          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg shadow-sm flex items-center gap-2 text-sm font-medium animate-in slide-in-from-right-5 fade-in duration-300">
-            <CheckCircle size={16} className="text-emerald-600" />
-            {successMessage}
+      {/* 🔔 PRETTY TOAST NOTIFICATION */}
+      {notification && (
+        <div className="fixed top-6 right-6 z-50 animate-in slide-in-from-right-5 fade-in duration-300">
+          <div className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border ${
+            notification.type === 'success' 
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}>
+            {notification.type === 'success' ? (
+              <CheckCircle size={18} className="text-emerald-600" />
+            ) : (
+              <AlertCircle size={18} className="text-red-600" />
+            )}
+            <span className="text-sm font-medium">{notification.message}</span>
+            <button onClick={() => setNotification(null)} className="ml-2 opacity-50 hover:opacity-100">
+              <X size={14} />
+            </button>
           </div>
-        )}
-        {errorMessage && (
-          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg shadow-sm flex items-center gap-2 text-sm font-medium animate-in slide-in-from-right-5 fade-in duration-300">
-            <AlertCircle size={16} className="text-red-600" />
-            {errorMessage}
-          </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* ================= SIDEBAR (Playlist) ================= */}
+      {/* ================= SIDEBAR ================= */}
       <aside 
         className={`fixed inset-y-0 left-0 z-40 w-80 bg-white border-r border-zinc-200 transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -235,11 +229,6 @@ export default function LearningPage() {
                     <p className={`text-sm font-medium leading-tight truncate ${isActive ? "text-white" : "text-zinc-900"}`}>
                       {lesson.title}
                     </p>
-                    <div className="flex gap-2 mt-1">
-                      <span className={`text-[10px] flex items-center gap-1 ${isActive ? "opacity-70" : "text-zinc-400"}`}>
-                        <FileText size={10} /> {lesson.type || 'Video'}
-                      </span>
-                    </div>
                   </div>
                 </button>
               );
@@ -287,11 +276,15 @@ export default function LearningPage() {
                     </p>
                   </div>
                   
-                  {/* Mark Complete Button with Loading State */}
+                  {/* Mark Complete Button (With Loading State) */}
                   <button 
                     onClick={markComplete}
                     disabled={markingComplete}
-                    className="shrink-0 flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-200 disabled:opacity-70 transition-colors"
+                    className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                       markingComplete 
+                         ? "bg-zinc-100 text-zinc-400 cursor-not-allowed" 
+                         : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                    }`}
                   >
                     {markingComplete ? <Loader2 className="animate-spin" size={16} /> : <CheckCircle size={16} />}
                     {markingComplete ? "Saving..." : "Mark as Complete"}
@@ -342,7 +335,7 @@ export default function LearningPage() {
                         href={currentLesson.quizFormUrl} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="block w-full text-center bg-yellow-500  py-2.5 rounded-lg text-sm font-medium hover:bg-yellow-600 transition"
+                        className="block w-full text-center bg-yellow-500 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-yellow-600 transition"
                       >
                         Take Quiz Now
                       </a>
