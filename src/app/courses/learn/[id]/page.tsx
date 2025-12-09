@@ -6,10 +6,10 @@ import Link from "next/link";
 import api from "@/lib/api";
 import { 
   PlayCircle, FileText, CheckCircle, 
-  ChevronLeft, Menu, X, ClipboardList, Send, Loader2 
+  ChevronLeft, Menu, X, ClipboardList, Send, Loader2, AlertCircle 
 } from "lucide-react";
 
-// 1. Define Types matching your Backend Schema
+// --- Types ---
 interface Lesson {
   _id: string;
   title: string;
@@ -26,106 +26,178 @@ interface CourseData {
   lessons: Lesson[];
 }
 
-// 2. Define the API Response shape
 interface LearnApiResponse {
   course: CourseData;
-  completedLessons?: string[]; // Array of lesson IDs
+  completedLessons: string[];
 }
 
 export default function LearningPage() {
-  const { courseId } = useParams();
+  const params = useParams();
+  const courseId = (params?.courseId || params?.id) as string;
   const router = useRouter();
 
-  // 3. Use typed state
+  // --- State ---
   const [course, setCourse] = useState<CourseData | null>(null);
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
+  
+  // UI States
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(""); 
   const [sidebarOpen, setSidebarOpen] = useState(true);
   
-  // Assignment State
+  // New States for Feedback
+  const [successMessage, setSuccessMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [markingComplete, setMarkingComplete] = useState(false);
+
+  // Assignment States
   const [submissionLink, setSubmissionLink] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  // Fetch Course Content
- useEffect(() => {
-  const fetchContent = async () => {
-    try {
-      // Call backend route /learn/course/:courseId
-      const res = await api.get<{
-        course: CourseData;
-        completedLessons: string[];
-      }>(`/learn/course/${courseId}`);
-
-      setCourse(res.data.course);
-
-      if (res.data.course.lessons.length > 0) {
-        setCurrentLesson(res.data.course.lessons[0]);
-      }
-    } catch (err: any) {
-      console.error(err);
-
-      // Redirect if not enrolled or error
-      if (err.response?.status === 403) {
-        alert("You are not enrolled in this course.");
-      }
-      router.push(`/courses/${courseId}`);
-    } finally {
-      setLoading(false);
-    }
+  // Helper to show temporary messages
+  const showSuccess = (msg: string) => {
+    setSuccessMessage(msg);
+    setTimeout(() => setSuccessMessage(""), 3000);
   };
 
-  if (courseId) fetchContent();
-}, [courseId, router]);
+  const showError = (msg: string) => {
+    setErrorMessage(msg);
+    setTimeout(() => setErrorMessage(""), 3000);
+  };
 
+  // --- Fetch Data ---
+  useEffect(() => {
+    if (!courseId) return;
 
-  // Handle Assignment Submit
+    const fetchContent = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const res = await api.get<LearnApiResponse>(`/learn/course/${courseId}`);
+        setCourse(res.data.course);
+
+        if (res.data.course.lessons.length > 0) {
+          setCurrentLesson(res.data.course.lessons[0]);
+        }
+      } catch (err: any) {
+        console.error("Fetch error:", err);
+        if (err.response?.status === 403) {
+          alert("You are not enrolled in this course.");
+          router.push(`/courses/${courseId}`);
+        } else if (err.response?.status === 404) {
+           setError("Course content not found.");
+        } else {
+           setError("Failed to load course. Please try again later.");
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchContent();
+  }, [courseId, router]);
+
+  // --- Handlers ---
   const handleSubmitAssignment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!currentLesson) return;
+
+    if (!submissionLink.trim()) {
+      showError("Please enter your Google Drive link.");
+      return;
+    }
+
+    const driveRegex = /^(https?:\/\/)?(www\.)?(drive\.google\.com|docs\.google\.com)\/.+$/;
+    if (!driveRegex.test(submissionLink.trim())) {
+      showError("Please submit a valid Google Drive link only.");
+      return;
+    }
 
     setSubmitting(true);
     try {
       await api.post("/assessments/submit", {
         lessonId: currentLesson._id,
-        driveLink: submissionLink
+        driveLink: submissionLink.trim(),
       });
-      alert("Assignment submitted successfully!");
+      showSuccess("Assignment submitted successfully!");
       setSubmissionLink("");
     } catch (err) {
-      alert("Failed to submit assignment.");
+      showError("Failed to submit assignment.");
     } finally {
       setSubmitting(false);
     }
   };
 
-  // Mark Lesson Complete
   const markComplete = async () => {
     if (!currentLesson) return;
+    
+    setMarkingComplete(true);
     try {
       await api.post("/learn/complete", { 
         courseId, 
         lessonId: currentLesson._id 
       });
-      alert("Lesson marked as complete!");
+      showSuccess("Lesson marked as complete!");
     } catch (err) {
       console.error(err);
+      showError("Failed to save progress.");
+    } finally {
+      setMarkingComplete(false);
     }
   };
 
-  if (loading) return <div className="h-screen flex items-center justify-center"><Loader2 className="animate-spin text-zinc-900" /></div>;
+  // --- Render ---
+
+  if (loading) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-zinc-50 gap-2">
+        <Loader2 className="animate-spin text-zinc-900" size={32} />
+        <p className="text-zinc-500 text-sm">Loading classroom...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center bg-zinc-50 gap-4 p-4 text-center">
+        <AlertCircle className="text-red-500" size={48} />
+        <h2 className="text-xl font-bold text-zinc-900">{error}</h2>
+        <Link href="/student/dashboard" className="text-sm font-semibold text-zinc-600 hover:text-zinc-900 underline">
+          Return to Dashboard
+        </Link>
+      </div>
+    );
+  }
+
   if (!course) return null;
 
   return (
-    <div className="flex h-screen bg-zinc-50 overflow-hidden text-zinc-900">
+    <div className="flex h-screen bg-zinc-50 overflow-hidden text-zinc-900 relative">
       
+      {/* --- TOAST NOTIFICATIONS --- */}
+      <div className="fixed top-6 right-6 z-50 flex flex-col gap-2">
+        {successMessage && (
+          <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 px-4 py-3 rounded-lg shadow-sm flex items-center gap-2 text-sm font-medium animate-in slide-in-from-right-5 fade-in duration-300">
+            <CheckCircle size={16} className="text-emerald-600" />
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg shadow-sm flex items-center gap-2 text-sm font-medium animate-in slide-in-from-right-5 fade-in duration-300">
+            <AlertCircle size={16} className="text-red-600" />
+            {errorMessage}
+          </div>
+        )}
+      </div>
+
       {/* ================= SIDEBAR (Playlist) ================= */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-50 w-80 bg-white border-r border-zinc-200 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-40 w-80 bg-white border-r border-zinc-200 transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } md:relative md:translate-x-0`}
       >
         <div className="h-full flex flex-col">
-          {/* Header */}
           <div className="p-4 border-b border-zinc-100 flex items-center justify-between bg-white">
             <Link href="/student/dashboard" className="flex items-center text-xs font-medium text-zinc-500 hover:text-zinc-900">
               <ChevronLeft size={14} /> Back to Dashboard
@@ -140,7 +212,6 @@ export default function LearningPage() {
             <p className="text-xs text-zinc-500 mt-1">{course.lessons.length} Lessons</p>
           </div>
 
-          {/* Lesson List */}
           <div className="flex-1 overflow-y-auto p-2 space-y-1">
             {course.lessons.map((lesson, idx) => {
               const isActive = currentLesson?._id === lesson._id;
@@ -149,7 +220,6 @@ export default function LearningPage() {
                   key={lesson._id}
                   onClick={() => {
                     setCurrentLesson(lesson);
-                    // Close sidebar on mobile when a lesson is clicked
                     if (window.innerWidth < 768) setSidebarOpen(false);
                   }}
                   className={`w-full text-left p-3 rounded-lg flex items-start gap-3 transition-colors ${
@@ -161,8 +231,8 @@ export default function LearningPage() {
                   <div className="mt-0.5 shrink-0">
                     {isActive ? <PlayCircle size={16} /> : <span className="text-xs font-mono w-4 inline-block text-center">{idx + 1}</span>}
                   </div>
-                  <div>
-                    <p className={`text-sm font-medium leading-tight ${isActive ? "text-white" : "text-zinc-900"}`}>
+                  <div className="min-w-0">
+                    <p className={`text-sm font-medium leading-tight truncate ${isActive ? "text-white" : "text-zinc-900"}`}>
                       {lesson.title}
                     </p>
                     <div className="flex gap-2 mt-1">
@@ -178,10 +248,8 @@ export default function LearningPage() {
         </div>
       </aside>
 
-      {/* ================= MAIN CONTENT (Video Player) ================= */}
+      {/* ================= MAIN CONTENT ================= */}
       <main className="flex-1 flex flex-col h-full overflow-hidden relative">
-        
-        {/* Mobile Header */}
         <div className="md:hidden p-4 bg-white border-b border-zinc-200 flex items-center gap-3">
           <button onClick={() => setSidebarOpen(true)} className="text-zinc-600">
             <Menu size={20} />
@@ -192,7 +260,7 @@ export default function LearningPage() {
         <div className="flex-1 overflow-y-auto p-4 md:p-8">
           <div className="max-w-4xl mx-auto space-y-8">
             
-            {/* Video Player Wrapper */}
+            {/* Video Player */}
             <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-lg relative ring-1 ring-zinc-900/5">
               {currentLesson?.videoUrl ? (
                 <iframe 
@@ -208,7 +276,7 @@ export default function LearningPage() {
               )}
             </div>
 
-            {/* Lesson Details & Actions */}
+            {/* Lesson Details */}
             {currentLesson && (
               <div className="space-y-6">
                 <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
@@ -218,20 +286,22 @@ export default function LearningPage() {
                       {currentLesson.description || "No description available for this lesson."}
                     </p>
                   </div>
+                  
+                  {/* Mark Complete Button with Loading State */}
                   <button 
                     onClick={markComplete}
-                    className="shrink-0 flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-200 transition"
+                    disabled={markingComplete}
+                    className="shrink-0 flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-medium hover:bg-emerald-200 disabled:opacity-70 transition-colors"
                   >
-                    <CheckCircle size={16} /> Mark as Complete
+                    {markingComplete ? <Loader2 className="animate-spin" size={16} /> : <CheckCircle size={16} />}
+                    {markingComplete ? "Saving..." : "Mark as Complete"}
                   </button>
                 </div>
 
                 <div className="h-px bg-zinc-200 w-full"></div>
 
-                {/* TABS: Quiz & Assignments */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
-                  {/* Assignment Box */}
+                  {/* Assignment */}
                   {currentLesson.assignmentText && (
                     <div className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
                       <h3 className="font-bold text-zinc-900 flex items-center gap-2 mb-4">
@@ -240,7 +310,6 @@ export default function LearningPage() {
                       <div className="text-sm text-zinc-600 mb-4 bg-zinc-50 p-3 rounded border border-zinc-100 whitespace-pre-wrap">
                         {currentLesson.assignmentText}
                       </div>
-                      
                       <form onSubmit={handleSubmitAssignment} className="space-y-3">
                         <label className="text-xs font-semibold text-zinc-500 uppercase">Submit Work</label>
                         <input 
@@ -262,26 +331,23 @@ export default function LearningPage() {
                     </div>
                   )}
 
-                  {/* Quiz Box */}
+                  {/* Quiz */}
                   {currentLesson.quizFormUrl && (
                     <div className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm h-fit">
                       <h3 className="font-bold text-zinc-900 flex items-center gap-2 mb-4">
                         <ClipboardList size={20} /> Quiz
                       </h3>
-                      <p className="text-sm text-zinc-600 mb-6">
-                        Test your knowledge on this topic. Complete the quiz to verify your understanding.
-                      </p>
+                      <p className="text-sm text-zinc-600 mb-6">Complete the quiz to verify your understanding.</p>
                       <a 
                         href={currentLesson.quizFormUrl} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="block w-full text-center bg-blue-600 text-white py-2.5 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
+                        className="block w-full text-center bg-yellow-500  py-2.5 rounded-lg text-sm font-medium hover:bg-yellow-600 transition"
                       >
                         Take Quiz Now
                       </a>
                     </div>
                   )}
-
                 </div>
               </div>
             )}
@@ -290,4 +356,4 @@ export default function LearningPage() {
       </main>
     </div>
   );
-} 
+}
