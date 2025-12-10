@@ -3,20 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
-import { Calendar, Users, Loader2, AlertCircle, Edit, ShieldCheck } from "lucide-react";
-import Link from "next/link"; // Import Link for navigation
+import { Calendar, Users, Loader2, AlertCircle, Edit, ShieldCheck, CreditCard } from "lucide-react";
+import Link from "next/link";
 import api from "@/lib/api";
 
-export default function EnrollmentButton({ courseId, batches }: { courseId: string, batches: any[] }) {
+// 1. Define the expected response shape
+interface PaymentResponse {
+  url: string;
+}
+
+export default function EnrollmentButton({ courseId, batches, price }: { courseId: string, batches: any[], price: number }) {
   const [selectedBatch, setSelectedBatch] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const { user, isAuthenticated } = useAuth();
   const router = useRouter();
 
-  // ==========================================
-  // 1. ADMIN VIEW: Show "Edit Course" Button
-  // ==========================================
+  // 1. ADMIN VIEW (Unchanged)
   if (isAuthenticated && user?.role === 'admin') {
     return (
       <div className="space-y-4">
@@ -25,9 +28,9 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
             <ShieldCheck size={18} />
             <span>Admin Controls</span>
           </div>
-          <Link
-            href={`/admin/create-course?edit=${courseId}`} // Or /admin/courses/edit/[id] depending on your route
-            className="flex text-md items-center justify-center gap-2 w-full bg-white border-2 border-zinc-900 text-zinc-900 font-bold  py-3 rounded-xl hover:bg-zinc-50 transition"
+          <Link 
+            href={`/admin/create-course?edit=${courseId}`}
+            className="flex text-md items-center justify-center gap-2 w-full bg-white border-2 border-zinc-900 text-zinc-900 font-bold py-3 rounded-xl hover:bg-zinc-50 transition"
           >
             <Edit size={18} /> Edit Course
           </Link>
@@ -36,14 +39,11 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
     );
   }
 
-  // ==========================================
-  // 2. STUDENT VIEW: Enrollment Logic
-  // ==========================================
-  const handleEnroll = async () => {
+  // 2. STUDENT VIEW: Payment Logic
+  const handlePayment = async () => {
     setError("");
 
     if (!isAuthenticated) {
-      // Redirect to login with a return URL
       router.push(`/login?redirect=/courses/${courseId}`);
       return;
     }
@@ -55,24 +55,27 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
 
     setLoading(true);
     try {
-      await api.post("/enrollments/enroll", {
+      // <PaymentResponse>  to tell TS what to expect
+      const res = await api.post<PaymentResponse>("/payment/create-checkout-session", {
         courseId,
         batchId: selectedBatch
       });
-      router.push("/student/dashboard");
-    } catch (err: any) {
-      // If already enrolled, just take them to the classroom
-      if (err.response?.status === 400 && err.response?.data?.message?.includes("Already enrolled")) {
-        setError(err.response?.data?.message);
-        setTimeout(() => {
-          router.push(`/learn/course/${courseId}`);
-        }, 1500);
 
+      // Now TS knows 'res.data' has a 'url' property
+      if (res.data.url) {
+        window.location.href = res.data.url;
       } else {
-        setError(err.response?.data?.message || "Enrollment failed");
+        setError("Failed to initialize payment.");
+        setLoading(false); // Only stop loading if we didn't redirect
       }
-    } finally {
-      setLoading(false);
+
+    } catch (err: any) {
+      setLoading(false); // Stop loading on error
+      if (err.response?.status === 400 && err.response?.data?.message?.includes("Already enrolled")) {
+         router.push(`/learn/course/${courseId}`);
+      } else {
+         setError(err.response?.data?.message || "Payment initialization failed");
+      }
     }
   };
 
@@ -94,10 +97,11 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
             <div
               key={batch._id}
               onClick={() => setSelectedBatch(batch._id)}
-              className={`cursor-pointer border rounded-lg p-3 text-sm transition-all ${selectedBatch === batch._id
+              className={`cursor-pointer border rounded-lg p-3 text-sm transition-all ${
+                selectedBatch === batch._id
                   ? "border-zinc-900 bg-zinc-50 ring-1 ring-zinc-900"
                   : "border-zinc-200 hover:border-zinc-400"
-                }`}
+              }`}
             >
               <div className="flex justify-between font-medium text-zinc-900">
                 <span>{batch.name}</span>
@@ -116,14 +120,14 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
 
       {/* Error Message */}
       {error && (
-        <div className="text-sm text-red-600 bg-red-50 p-2 rounded flex items-center gap-2">
+        <div className="text-sm text-red-600 bg-red-50 p-2 rounded flex items-start gap-2">
           <AlertCircle size={14} /> {error}
         </div>
       )}
 
       {/* Main Button */}
       <button
-        onClick={handleEnroll}
+        onClick={handlePayment}
         disabled={loading}
         className="w-full bg-zinc-900 text-white font-bold text-lg py-3 rounded-xl hover:bg-zinc-800 transition active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed flex justify-center items-center gap-2"
       >
@@ -132,9 +136,15 @@ export default function EnrollmentButton({ courseId, batches }: { courseId: stri
             <Loader2 className="animate-spin" size={20} /> Processing...
           </>
         ) : (
-          "Enroll Now"
+          <>
+            <CreditCard size={20} /> Enroll for ৳{price}
+          </>
         )}
       </button>
+      
+      <p className="text-xs text-center text-zinc-400">
+        Secure payment powered by Stripe
+      </p>
     </div>
   );
 }
