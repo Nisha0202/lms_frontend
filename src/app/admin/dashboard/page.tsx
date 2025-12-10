@@ -119,26 +119,26 @@ export default function AdminDashboard() {
           </div>
 
           {/* Card 2 (Clickable) */}
-          <Link href="/admin/enrollments" className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between hover:border-zinc-300 transition-colors group">
+          <div className="bg-white cursor-pointer p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between hover:border-zinc-300 transition-colors group">
             <div>
-              <p className="text-sm font-medium text-zinc-500 group-hover:text-blue-600 transition">Students</p>
+              <p className="text-sm font-medium text-zinc-500 group-hover:text-blue-600 transition">Total Registration4s</p>
               <p className="text-3xl font-bold text-zinc-900 mt-1">{stats.totalStudents}</p>
             </div>
             <div className="h-12 w-12 bg-zinc-100 rounded-full flex items-center justify-center text-zinc-600 group-hover:bg-blue-50 group-hover:text-blue-600 transition">
               <Users size={24} />
             </div>
-          </Link>
+          </div>
 
           {/* Card 3 */}
-          <div className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between">
+          <Link href="/admin/enrollments" className="bg-white p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between hover:border-zinc-300 transition-colors group">
             <div>
-              <p className="text-sm font-medium text-zinc-500">Total Enrollments</p>
+              <p className="text-sm font-medium text-zinc-500 group-hover:text-blue-600 ">Total Enrollments</p>
               <p className="text-3xl font-bold text-zinc-900 mt-1">{stats.totalEnrollments}</p>
             </div>
-            <div className="h-12 w-12 bg-zinc-100 rounded-full flex items-center justify-center text-zinc-600">
+            <div className="h-12 w-12 bg-zinc-100 rounded-full flex items-center justify-center text-zinc-600   group-hover:bg-blue-50 group-hover:text-blue-600 transition">
               <DollarSign size={24} />
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Recent Courses Table */}
