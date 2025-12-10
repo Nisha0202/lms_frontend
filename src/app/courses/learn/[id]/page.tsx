@@ -94,29 +94,41 @@ export default function LearningPage() {
 
   // --- Handlers ---
   const handleSubmitAssignment = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!currentLesson) return;
+  e.preventDefault();
+  if (!currentLesson) return;
 
-    // Basic Validation
-    if (!submissionLink.trim()) {
-        showNotification("Please enter a link first.", "error");
-        return;
-    }
+  if (!submissionLink.trim()) {
+    showNotification("Please enter a link first.", "error");
+    return;
+  }
 
-    setSubmitting(true);
-    try {
-      await api.post("/assessments/submit", {
-        lessonId: currentLesson._id,
-        driveLink: submissionLink
-      });
-      showNotification("Assignment submitted successfully!", "success");
-      setSubmissionLink("");
-    } catch (err) {
-      showNotification("Failed to submit assignment.", "error");
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  // Allow only Google Drive links
+  const isGoogleDriveLink =
+    submissionLink.startsWith("https://drive.google.com/") ||
+    submissionLink.startsWith("https://docs.google.com/");
+
+  if (!isGoogleDriveLink) {
+    showNotification("Only Google Drive links are allowed.", "error");
+    return;
+  }
+
+  setSubmitting(true);
+
+  try {
+    await api.post("/assessments/submit-assignment", {
+      lessonId: currentLesson._id,
+      driveLink: submissionLink,
+    });
+
+    showNotification("Assignment submitted successfully!", "success");
+    setSubmissionLink("");
+  } catch (err) {
+    showNotification("Failed to submit assignment.", "error");
+  } finally {
+    setSubmitting(false);
+  }
+};
+
 
   const markComplete = async () => {
     if (!currentLesson) return;

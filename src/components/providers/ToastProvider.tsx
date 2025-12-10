@@ -39,7 +39,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       
       {/* --- THE TOAST UI COMPONENT --- */}
       {isVisible && (
-        <div className="fixed bottom-20 right-6 z-100 animate-in slide-in-from-right-5 fade-in duration-300">
+        <div className="fixed  inset-auto bottom-6 right-6right-6 z-100 animate-in slide-in-from-right-5 fade-in duration-300">
           <div
             className={`flex items-center gap-3 px-4 py-3 rounded-lg shadow-lg border ${
               type === "success"

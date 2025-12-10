@@ -93,8 +93,8 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
                 ))}
               </div>
             </div>
-            
-            <Link href={`/courses/learn/${course._id}`}>start learning</Link>
+          
+            {/* Admin Edit Link */}
             <Link href={`/admin/courses/edit/${course._id}`}>edit course</Link>
 
 
