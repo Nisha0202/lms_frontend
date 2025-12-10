@@ -44,7 +44,7 @@ export default function EnrollmentButton({ courseId, batches, price }: { courseI
     setError("");
 
     if (!isAuthenticated) {
-      router.push(`/login?redirect=/courses/${courseId}`);
+      router.push(`/signin?redirect=/courses/${courseId}`);
       return;
     }
 
@@ -72,7 +72,7 @@ export default function EnrollmentButton({ courseId, batches, price }: { courseI
     } catch (err: any) {
       setLoading(false); // Stop loading on error
       if (err.response?.status === 400 && err.response?.data?.message?.includes("Already enrolled")) {
-         router.push(`/learn/course/${courseId}`);
+         
       } else {
          setError(err.response?.data?.message || "Payment initialization failed");
       }
