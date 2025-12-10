@@ -1,5 +1,6 @@
 import Link from 'next/link';
-import { BookOpen, Award, Video, ArrowRight } from 'lucide-react';
+import {  ArrowRight } from 'lucide-react';
+import CourseCard from '@/components/CourseCard';
 
 // ================= SERVER-SIDE DATA FETCH =================
 async function getFeaturedCourses() {
@@ -36,74 +37,52 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ================= FEATURES ================= */}
-      <section className="py-16 px-4 bg-gray-100">
-        <div className="container mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          <FeatureCard 
-            icon={<BookOpen className="w-10 h-10 text-gray-800 mx-auto" />} 
-            title="Extensive Curriculum" 
-            desc="Learn from a wide variety of topics and structured courses for all levels." 
-          />
-          <FeatureCard 
-            icon={<Video className="w-10 h-10 text-gray-800 mx-auto" />} 
-            title="Video Lessons" 
-            desc="Watch high-quality video lectures at your own pace." 
-          />
-          <FeatureCard 
-            icon={<Award className="w-10 h-10 text-gray-800 mx-auto" />} 
-            title="Certifications" 
-            desc="Earn certificates for completed courses and showcase your skills." 
-          />
-        </div>
-      </section>
 
+
+     
       {/* ================= FEATURED COURSES ================= */}
-      <section className="py-16 px-4 bg-gray-50">
-        <div className="container mx-auto">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-10 text-center">Featured Courses</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-            {courses.map((course: any) => (
-              <div key={course._id} className="bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition">
-                <h3 className="text-xl font-bold mb-2">{course.title}</h3>
-                <p className="text-gray-700 mb-4">{course.description?.slice(0, 80)}...</p>
-                <Link 
-                  href={`/courses/${course._id}`} 
-                  className="inline-flex items-center gap-2 text-yellow-500 font-bold hover:underline"
-                >
-                  View Course <ArrowRight className="w-4 h-4"/>
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+<section className="py-16 px-4 bg-gray-50">
+  <div className="container mx-auto">
 
-      {/* ================= FOOTER ================= */}
-      <footer className="bg-gray-900 text-gray-400 py-12 px-4">
-        <div className="container mx-auto text-center">
-          <h3 className="text-white text-xl font-bold mb-4">LMS Platform</h3>
-          <p className="mb-8 max-w-md mx-auto text-gray-300">
-            Empowering students with accessible education. Built with Next.js, Node.js, and MongoDB.
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6 text-sm">
-            <Link href="#" className="hover:text-white">Privacy Policy</Link>
-            <Link href="#" className="hover:text-white">Terms of Service</Link>
-            <Link href="#" className="hover:text-white">Support</Link>
-          </div>
-          <p className="mt-8 text-xs">&copy; {new Date().getFullYear()} LMS Platform. All rights reserved.</p>
+    <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-10 text-center">
+      Featured Courses
+    </h2>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+
+      {/* Show first 5 courses */}
+      {courses.slice(0, 5).map((course: any) => (
+        <CourseCard key={course._id} course={course} />
+      ))}
+
+      {/* Sixth Card → Browse More */}
+      <Link 
+        href="/courses"
+        className="
+          group flex flex-col items-center justify-center 
+          bg-white border border-zinc-200 rounded-xl 
+          shadow-sm hover:shadow-md transition-all p-6 text-center"
+      >
+        <div className="text-3xl font-bold text-zinc-900 mb-2">
+          Browse More Courses
         </div>
-      </footer>
+        <p className="text-zinc-500 text-sm mb-4">
+          Explore our full catalog & start learning today.
+        </p>
+
+        <div className="inline-flex items-center gap-2 text-zinc-900 font-semibold">
+          Explore All <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+        </div>
+      </Link>
+
+    </div>
+
+  </div>
+</section>
+
+
+
     </div>
   );
 }
 
-// ================= FEATURE CARD =================
-function FeatureCard({ icon, title, desc }: { icon: any, title: string, desc: string }) {
-  return (
-    <div className="bg-white p-8 rounded-xl shadow-md border border-gray-200 text-center hover:shadow-lg transition">
-      <div className="flex justify-center mb-4">{icon}</div>
-      <h3 className="text-xl font-bold mb-2 text-gray-900">{title}</h3>
-      <p className="text-gray-700">{desc}</p>
-    </div>
-  );
-}

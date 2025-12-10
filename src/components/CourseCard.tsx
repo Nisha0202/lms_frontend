@@ -14,8 +14,7 @@ interface CourseProps {
 }
 
 export default function CourseCard({ course }: { course: CourseProps }) {
-  // const { user } = useAuth();
-  // const isAdmin = user?.role === "admin";
+
 
   return (
     <div className="group flex flex-col h-full bg-white rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 overflow-hidden">
