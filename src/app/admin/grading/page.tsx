@@ -54,7 +54,7 @@ export default function AdminGradingPage() {
             _id: q._id,
             student: q.student,
             lesson: q.lesson,
-            grade: q.score, // <--- MAPPING HAPPENS HERE
+            grade: q.score, 
             feedback: q.feedback,
             type: 'quiz'
           }));
