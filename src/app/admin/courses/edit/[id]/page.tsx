@@ -4,15 +4,16 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import api from "@/lib/api";
+import { confirmToast } from "@/components/ConfirmToast";
 import { useAuth } from "@/hooks/useAuth";
-import { 
-  ArrowLeft, Plus, Trash2, Calendar, Video, 
-  Save, Loader2, ChevronDown, ChevronUp, 
-  FileText, ClipboardList, Layers, ImageIcon, AlertCircle 
+import { useToast } from "@/components/providers/ToastProvider";
+import {
+  ArrowLeft, Plus, Trash2, Calendar, Video,
+  Save, Loader2, ChevronDown, ChevronUp,
+  FileText, ClipboardList, Layers, ImageIcon, AlertCircle
 } from "lucide-react";
 
-
-// 1. Keep your existing types (Batch, Lesson, CoursePayload)
+// ... [Keep Interfaces Batch, Lesson, CourseResponse, CoursePayload unchanged] ...
 interface Batch {
   name: string;
   startDate: string;
@@ -29,7 +30,6 @@ interface Lesson {
   isExpanded: boolean;
 }
 
-// 2. ADD THIS INTERFACE: Define what the API returns
 interface CourseResponse {
   _id: string;
   title: string;
@@ -41,6 +41,7 @@ interface CourseResponse {
   batches: Batch[];
   lessons: Lesson[];
 }
+
 interface CoursePayload {
   title: string;
   description: string;
@@ -51,12 +52,12 @@ interface CoursePayload {
   batches: Batch[];
 }
 
-  // ... rest of the component
 export default function EditCoursePage() {
   const router = useRouter();
-  const { id } = useParams(); // Get Course ID from URL
-  const { user,  loading } = useAuth();
-  
+  const { id } = useParams();
+  const { user, loading } = useAuth();
+  const toast = useToast(); // <--- 2. Initialize Toast
+
   // --- Loading States ---
   const [status, setStatus] = useState<"idle" | "loading_data" | "saving" | "success">("loading_data");
   const [loadingText, setLoadingText] = useState("Loading Course Data...");
@@ -76,14 +77,13 @@ export default function EditCoursePage() {
   const [tagInput, setTagInput] = useState("");
   const [lessons, setLessons] = useState<Lesson[]>([]);
 
+  // --- 1. FETCH DATA ---
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        // 3. FIX: Pass <CourseResponse> here
         const res = await api.get<CourseResponse>(`/courses/${id}`);
-        const course = res.data; // Now TypeScript knows this is a 'CourseResponse'
+        const course = res.data;
 
-        // Populate Form (Now course.title, course.price etc. are valid)
         setForm({
           title: course.title,
           description: course.description,
@@ -98,7 +98,6 @@ export default function EditCoursePage() {
           }))
         });
 
-        // Populate Lessons
         setLessons(course.lessons.map((l: any) => ({
           ...l,
           quizFormUrl: l.quizFormUrl || "",
@@ -111,11 +110,12 @@ export default function EditCoursePage() {
         console.error(err);
         setError("Failed to load course data.");
         setStatus("idle");
+        toast.error("Failed to load course data"); // <--- Toast
       }
     };
 
     if (id) fetchCourseData();
-  }, [id]);
+  }, [id, toast]);
 
   // --- Security Check ---
   useEffect(() => {
@@ -133,14 +133,12 @@ export default function EditCoursePage() {
     );
   }
 
-  // --- Handlers (Same as Create Page) ---
-  // To save space, I'm using the exact same logic.
-  // Ideally, you would extract this logic into a custom hook `useCourseForm`.
-  
+  // --- HELPER FUNCTIONS ---
   function updateField<K extends keyof CoursePayload>(key: K, value: CoursePayload[K]) {
     setForm((prev) => ({ ...prev, [key]: value }));
   }
 
+  // Tag Handlers
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
@@ -156,6 +154,7 @@ export default function EditCoursePage() {
     updateField("tags", form.tags.filter(t => t !== tagToRemove));
   };
 
+  // Batch Handlers
   const handleAddBatch = () => {
     setForm(prev => ({
       ...prev,
@@ -173,6 +172,7 @@ export default function EditCoursePage() {
     setForm(prev => ({ ...prev, batches: prev.batches.filter((_, i) => i !== index) }));
   };
 
+  // Lesson Handlers
   const handleAddLesson = () => {
     setLessons(prev => [
       ...prev.map(l => ({ ...l, isExpanded: false })),
@@ -192,11 +192,43 @@ export default function EditCoursePage() {
     setLessons(updated);
   };
 
-  const removeLesson = (index: number) => {
-    setLessons(lessons.filter((_, i) => i !== index));
+  // --- 2. DELETE LOGIC WITH TOAST ---
+  const removeLesson = async (index: number) => {
+    const lessonToRemove = lessons[index];
+
+    // Case 1: Existing Lesson -> Delete from DB
+    if (lessonToRemove._id) {
+      const confirmDelete = await confirmToast(
+        `Are you sure you want to delete "${lessonToRemove.title}"?`
+      );
+
+      if (!confirmDelete) return;
+
+      try {
+        setLoadingText("Deleting lesson...");
+        setStatus("saving");
+
+        await api.delete(`/courses/${id}/lessons/${lessonToRemove._id}`);
+
+        setLessons((prev) => prev.filter((_, i) => i !== index));
+        setStatus("idle");
+
+        toast.success("Lesson deleted successfully"); // <--- Success Toast
+
+      } catch (err) {
+        console.error("Failed to delete lesson", err);
+        setStatus("idle");
+        toast.error("Failed to delete lesson"); // <--- Error Toast
+      }
+    }
+    // Case 2: Draft Lesson -> Local Delete
+    else {
+      setLessons((prev) => prev.filter((_, i) => i !== index));
+      toast.success("Draft lesson removed"); // <--- Success Toast
+    }
   };
 
-  // --- UPDATE SUBMIT LOGIC ---
+  // --- 3. SUBMIT LOGIC WITH TOAST ---
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -204,30 +236,23 @@ export default function EditCoursePage() {
     try {
       setStatus("saving");
       setLoadingText("Updating Course Details...");
-      
-      // 1. Update Course Info (PUT)
+
       await api.put(`/courses/${id}`, form);
 
-      // 2. Handle Lessons (Create New ones)
-      // NOTE: Updating existing lessons requires a dedicated backend endpoint (PUT /lessons/:id).
-      // For this MVP, we are simply adding NEW lessons to the list.
-      // If you want to update existing lessons, your backend needs a `updateLesson` controller.
-      
-      // Filter out lessons that don't have an ID (New Lessons)
       const newLessons = lessons.filter(l => !l._id);
-      
+
       if (newLessons.length > 0) {
         setLoadingText(`Adding ${newLessons.length} new lessons...`);
         for (const lesson of newLessons) {
-           const { isExpanded, _id, ...lessonData } = lesson; // Clean payload
-           await api.post(`/courses/${id}/lessons`, lessonData);
+          const { isExpanded, _id, ...lessonData } = lesson;
+          await api.post(`/courses/${id}/lessons`, lessonData);
         }
       }
 
       setStatus("success");
       setLoadingText("Course Updated Successfully!");
-      
-      // Redirect after short delay
+      toast.success("Course updated successfully!"); // <--- Success Toast
+
       setTimeout(() => {
         router.push("/admin/dashboard");
       }, 1000);
@@ -235,15 +260,21 @@ export default function EditCoursePage() {
     } catch (err: any) {
       console.error(err);
       setStatus("idle");
-      setError(err.response?.data?.message || "Failed to update course.");
+      const errMsg = err.response?.data?.message || "Failed to update course.";
+      setError(errMsg);
+      toast.error(errMsg); // <--- Error Toast
       window.scrollTo(0, 0);
     }
   };
 
+  // --- RENDER ---
+  // ... [The JSX render part remains identical to your previous code] ...
+  // ... [I'm omitting the JSX repetition to save space, but copy everything from return ( ... ) onwards] ...
+
   return (
     <div className="min-h-screen bg-zinc-50 py-12 px-4 sm:px-6 text-zinc-900 font-sans">
       <div className="max-w-5xl mx-auto">
-        
+
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -263,8 +294,8 @@ export default function EditCoursePage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          
-          {/* ---------------- SECTION 1: COURSE INFO ---------------- */}
+
+          {/* SECTION 1: COURSE INFO */}
           <section className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
             <h2 className="text-lg font-bold flex items-center gap-2 mb-6 pb-4 border-b border-zinc-100">
               <Layers className="text-zinc-400" size={20} />
@@ -280,7 +311,7 @@ export default function EditCoursePage() {
                     type="text"
                     value={form.title}
                     onChange={(e) => updateField("title", e.target.value)}
-                    className="w-full px-3 py-2.5 bg-white border border-zinc-300 rounded-lg focus:ring-2 focus:ring-zinc-900 focus:border-transparent outline-none transition-all"
+                    className="w-full px-3 py-2.5 bg-white border border-zinc-300 rounded-lg focus:ring-2 focus:ring-zinc-900 outline-none"
                   />
                 </div>
 
@@ -336,16 +367,13 @@ export default function EditCoursePage() {
                   />
                 </div>
 
-                {/* Tags */}
                 <div className="col-span-1 md:col-span-2">
                   <label className="block text-sm font-medium mb-1.5">Tags</label>
                   <div className="flex flex-wrap gap-2 mb-2">
                     {form.tags.map((tag, idx) => (
                       <span key={idx} className="bg-zinc-100 text-zinc-800 text-xs px-2 py-1 rounded-full flex items-center gap-1 border border-zinc-200">
                         {tag}
-                        <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-600 ml-1">
-                          &times;
-                        </button>
+                        <button type="button" onClick={() => removeTag(tag)} className="hover:text-red-600 ml-1">&times;</button>
                       </span>
                     ))}
                   </div>
@@ -362,7 +390,7 @@ export default function EditCoursePage() {
             </div>
           </section>
 
-          {/* ---------------- SECTION 2: BATCHES ---------------- */}
+          {/* SECTION 2: BATCHES */}
           <section className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-100">
               <h2 className="text-lg font-bold flex items-center gap-2">
@@ -388,7 +416,7 @@ export default function EditCoursePage() {
                   >
                     <Trash2 size={18} />
                   </button>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs uppercase font-bold text-zinc-500 mb-1 block">Batch Name</label>
@@ -435,7 +463,7 @@ export default function EditCoursePage() {
             </div>
           </section>
 
-          {/* ---------------- SECTION 3: CURRICULUM ---------------- */}
+          {/* SECTION 3: CURRICULUM */}
           <section className="bg-white border border-zinc-200 rounded-xl p-6 shadow-sm">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-zinc-100">
               <h2 className="text-lg font-bold flex items-center gap-2">
@@ -455,7 +483,7 @@ export default function EditCoursePage() {
               {lessons.map((lesson, index) => (
                 <div key={index} className="border border-zinc-200 rounded-xl overflow-hidden bg-white shadow-sm transition-all hover:border-zinc-300">
                   {/* Lesson Header */}
-                  <div 
+                  <div
                     className="flex items-center justify-between p-4 bg-zinc-50 cursor-pointer select-none"
                     onClick={() => toggleLessonExpand(index)}
                   >
@@ -469,15 +497,15 @@ export default function EditCoursePage() {
                       {lesson._id && <span className="text-[10px] bg-zinc-100 px-2 py-0.5 rounded text-zinc-500">Existing</span>}
                     </div>
                     <div className="flex items-center gap-2">
-                      {!lesson._id && (
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); removeLesson(index); }}
-                          className="p-1.5 text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded transition"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      )}
+                      {/* Delete Button (Calls removeLesson logic) */}
+                      <button
+                        type="button"
+                        onClick={(e) => { e.stopPropagation(); removeLesson(index); }}
+                        className="p-1.5 text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded transition"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+
                       {lesson.isExpanded ? <ChevronUp size={18} className="text-zinc-400" /> : <ChevronDown size={18} className="text-zinc-400" />}
                     </div>
                   </div>
@@ -488,7 +516,7 @@ export default function EditCoursePage() {
                       {lesson._id ? (
                         <div className="bg-zinc-50 p-4 rounded text-sm text-zinc-500 text-center">
                           To edit existing lessons, please use the specific Lesson Editor (Feature coming soon).
-                          <br/>You can only create <strong>new</strong> lessons here.
+                          <br />You can only create <strong>new</strong> lessons here.
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -539,7 +567,7 @@ export default function EditCoursePage() {
             </div>
           </section>
 
-          {/* ---------------- FOOTER ACTIONS ---------------- */}
+          {/* FOOTER ACTIONS */}
           <div className="flex justify-end pt-6">
             <button
               type="submit"

@@ -5,15 +5,21 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
 import { useState } from "react";
+import { confirmToast } from "./ConfirmToast";
 
 export default function DashboardActions({ courseId }: { courseId: string }) {
   const router = useRouter();
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDelete = async () => {
-    if (!confirm("Are you sure you want to delete this course?")) return;
-    
+    const ok = await confirmToast("⚠️ ARE YOU SURE?\nDelete?");
+
+    if (!ok) return; // STOP if cancelled
+
     setIsDeleting(true);
+
+
+
     try {
       await api.delete(`/courses/${courseId}`);
       router.refresh(); // Reloads the page data
@@ -27,7 +33,7 @@ export default function DashboardActions({ courseId }: { courseId: string }) {
   return (
     <div className="flex items-center gap-2 justify-end">
       <Link
-        href={`/admin/create-course?edit=${courseId}`} // You can handle edit logic later
+        href={`/admin/courses/edit/${courseId}`} // You can handle edit logic later
         className="p-2 text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 rounded-lg transition"
         title="Edit Course"
       >

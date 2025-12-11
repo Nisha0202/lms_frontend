@@ -5,6 +5,7 @@ import { AuthProvider } from '@/hooks/useAuth'; // Import this
 import Navbar from '../components/Navbar';         // Import this
 import { ToastProvider } from '@/components/providers/ToastProvider';
 import Footer from '@/components/Footer';
+import ConfirmToast from '@/components/ConfirmToast';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
            
           <main className="mb-6 sm:mb-12">
             {children}
+            <ConfirmToast />
           </main>
           </ToastProvider>
          <Footer/>
