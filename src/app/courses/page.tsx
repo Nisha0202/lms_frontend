@@ -40,7 +40,7 @@ async function getCourses(searchParams: any): Promise<CoursesResponse> {
   }
 }
 
-// 1. Update Props Interface to use Promise
+
 interface PageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }

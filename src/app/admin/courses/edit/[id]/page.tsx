@@ -13,44 +13,9 @@ import {
   FileText, ClipboardList, Layers, ImageIcon, AlertCircle
 } from "lucide-react";
 
-// ... [Keep Interfaces Batch, Lesson, CourseResponse, CoursePayload unchanged] ...
-interface Batch {
-  name: string;
-  startDate: string;
-  endDate: string;
-  seatLimit: number;
-}
+import type { CourseResponse, CoursePayload, Lesson, Batch } from "@/types";
 
-interface Lesson {
-  _id?: string;
-  title: string;
-  videoUrl: string;
-  quizFormUrl: string;
-  assignmentText: string;
-  isExpanded: boolean;
-}
 
-interface CourseResponse {
-  _id: string;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  thumbnail: string;
-  tags: string[];
-  batches: Batch[];
-  lessons: Lesson[];
-}
-
-interface CoursePayload {
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  thumbnail: string;
-  tags: string[];
-  batches: Batch[];
-}
 
 export default function EditCoursePage() {
   const router = useRouter();

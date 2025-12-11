@@ -9,40 +9,8 @@ import {
   Save, Loader2, ChevronDown, ChevronUp, 
   FileText, ClipboardList, Layers, ImageIcon 
 } from "lucide-react";
+import type { CourseResponse, CoursePayload, Lesson, Batch } from "@/types";
 
-// --- 1. Define Strict Types ---
-
-interface Batch {
-  name: string;
-  startDate: string;
-  endDate: string;
-  seatLimit: number;
-}
-
-interface Lesson {
-  title: string;
-  videoUrl: string;
-  quizFormUrl: string;
-  assignmentText: string;
-  isExpanded: boolean; 
-}
-
-interface CoursePayload {
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  thumbnail: string;
-  tags: string[];
-  batches: Batch[];
-}
-
-// 2. Fix the Error: Define what the API returns
-interface CourseResponse {
-  _id: string;
-  title: string;
-  // add other fields if needed
-}
 
 export default function CreateCoursePage() {
   const router = useRouter();

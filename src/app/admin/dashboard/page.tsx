@@ -6,7 +6,7 @@ import Image from "next/image";
 import api from "@/lib/api";
 import { Plus, BookOpen, Users, DollarSign, ArrowRight, Loader2 } from "lucide-react";
 import DashboardActions from "@/components/DashboardActions";
-
+import type { CourseResponse, CoursePayload, Lesson, Batch } from "@/types";
 // --- 1. Define Interfaces ---
 
 interface Course {
