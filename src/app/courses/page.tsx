@@ -2,13 +2,7 @@ import Link from "next/link";
 import CourseCard from "@/components/CourseCard";
 import CourseFilters from "@/components/CourseFilters";
 import { AlertCircle, ChevronLeft, ChevronRight } from "lucide-react";
-
-type CoursesResponse = {
-  total: number;
-  page: number;
-  limit: number;
-  courses: any[];
-};
+import  { CoursesResponse } from "@/types";
 
 async function getCourses(searchParams: any): Promise<CoursesResponse> {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";

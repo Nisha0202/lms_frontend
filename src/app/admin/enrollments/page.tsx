@@ -4,15 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
 import { ArrowLeft, Search, Loader2, User, BookOpen, Calendar, Mail } from "lucide-react";
+import { EnrollmentData } from "@/types";
 
-interface EnrollmentData {
-    _id: string;
-    studentName: string;
-    studentEmail: string;
-    courseTitle: string;
-    batchName: string;
-    enrolledAt: string;
-}
 
 export default function AdminEnrollmentsPage() {
     const [enrollments, setEnrollments] = useState<EnrollmentData[]>([]);

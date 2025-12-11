@@ -3,17 +3,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { Tag, ArrowRight } from "lucide-react";
 
+import type { CourseResponse} from "@/types";
 
-interface CourseProps {
-  _id: string;
-  title: string;
-  thumbnail: string;
-  category: string;
-  price: number;
-  description?: string;
-}
+// interface CourseProps {
+//   _id: string;
+//   title: string;
+//   thumbnail: string;
+//   category: string;
+//   price: number;
+//   description?: string;
+// }
 
-export default function CourseCard({ course }: { course: CourseProps }) {
+export default function CourseCard({ course }: { course: CourseResponse }) {
 
 
   return (

@@ -6,34 +6,9 @@ import api from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
 import { BookOpen, Loader2, ArrowRight, LayoutDashboard, FileText, CheckCircle, XCircle } from "lucide-react";
 import StudentCourseCard from "@/components/StudentCourseCard";
+import type { EnrolledCourse, GradeData } from "@/types";
 
-// --- Types ---
-interface EnrolledCourse {
-  _id: string;
-  course: {
-    _id: string;
-    title: string;
-    description: string;
-    category: string;
-    price: number;
-    thumbnail?: string;
-  };
-  batchName: string;
-  startDate: string;
-  progress: number;
-  paymentStatus: string;
-  createdAt: string;
-}
 
-interface GradeData {
-  assignments: {
-    _id: string;
-    lesson: { title: string } | null;
-    grade?: number;
-    feedback?: string;
-    createdAt: string;
-  }[];
-}
 
 export default function StudentDashboardPage() {
   const { user } = useAuth();

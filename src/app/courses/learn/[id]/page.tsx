@@ -9,16 +9,18 @@ import {
   ChevronLeft, Menu, X, ClipboardList, Send, Loader2, AlertCircle, Check 
 } from "lucide-react";
 
+import type {  Lesson } from "@/types";
+
 // Types
-interface Lesson {
-  _id: string;
-  title: string;
-  description?: string;
-  videoUrl: string;
-  type?: 'video' | 'quiz' | 'assignment';
-  quizFormUrl?: string;
-  assignmentText?: string;
-}
+// interface Lesson {
+//   _id: string;
+//   title: string;
+//   description?: string;
+//   videoUrl: string;
+//   type?: 'video' | 'quiz' | 'assignment';
+//   quizFormUrl?: string;
+//   assignmentText?: string;
+// }
 
 interface CourseData {
   _id: string;

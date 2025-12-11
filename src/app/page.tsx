@@ -5,7 +5,7 @@ import CourseCard from '@/components/CourseCard';
 // ================= SERVER-SIDE DATA FETCH =================
 async function getFeaturedCourses() {
   try {
-    const res = await fetch('http://localhost:4000/api/courses?limit=2&sort=-createdAt', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/courses?limit=2&sort=-createdAt`, {
       cache: 'no-store',
     });
     if (!res.ok) return [];

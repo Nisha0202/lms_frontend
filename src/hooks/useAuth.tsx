@@ -2,13 +2,14 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import api from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import { User } from '@/types';
 
-export interface User {
-  _id: string;
-  name: string;
-  email: string;
-  role: 'student' | 'admin';
-}
+// export interface User {
+//   _id: string;
+//   name: string;
+//   email: string;
+//   role: 'student' | 'admin';
+// }
 
 interface AuthResponse {
   token: string;

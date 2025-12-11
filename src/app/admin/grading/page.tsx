@@ -5,17 +5,9 @@ import Link from "next/link";
 import api from "@/lib/api";
 import { ArrowLeft, Save, Loader2, FileText, CheckCircle, Clock, ExternalLink, Inbox } from "lucide-react";
 import { useToast } from "@/components/providers/ToastProvider";
+import type {GradingItem } from "@/types";
 
-// --- Types ---
-interface GradingItem {
-  _id: string; // Assignment Submission ID
-  student: { name: string; email: string };
-  lesson: { title: string };
-  grade?: number;
-  feedback?: string;
-  driveLink?: string; 
-  createdAt?: string;
-}
+
 
 export default function AdminGradingPage() {
   const toast = useToast();

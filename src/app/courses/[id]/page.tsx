@@ -3,7 +3,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Users, PlayCircle, FileText, CheckCircle2, Lock } from "lucide-react";
 import EnrollmentButton from "@/components/EnrollmentButton"; // We will create this small helper
-import Link from "next/link";
+
 
 
 // Helper to format currency

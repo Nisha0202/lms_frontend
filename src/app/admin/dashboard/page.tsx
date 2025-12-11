@@ -6,40 +6,35 @@ import Image from "next/image";
 import api from "@/lib/api";
 import { Plus, BookOpen, Users, DollarSign, ArrowRight, Loader2 } from "lucide-react";
 import DashboardActions from "@/components/DashboardActions";
-import type { CourseResponse, CoursePayload, Lesson, Batch } from "@/types";
+import type { CourseResponse, StatsApiResponse  } from "@/types";
 // --- 1. Define Interfaces ---
 
-interface Course {
-  _id: string;
-  title: string;
-  price: number;
-  category: string;
-  thumbnail: string;
-}
+// interface Course {
+//   _id: string;
+//   title: string;
+//   price: number;
+//   category: string;
+//   thumbnail: string;
+// }
 
-// What the GET /enrollments/admin/stats endpoint returns
-interface StatsApiResponse {
-  totalCourses: number;
-  totalStudents: number;
-  totalEnrollments: number;
-}
+
 
 // What the GET /courses endpoint returns
 interface CoursesApiResponse {
-  courses: Course[];
+  courses: CourseResponse[];
   total: number;
 }
 
-// What our Component State looks like (combines both)
-interface DashboardState {
-  totalCourses: number;
-  totalStudents: number;
-  totalEnrollments: number;
-  courses: Course[];
-}
+// // What our Component State looks like (combines both)
+// interface DashboardState {
+//   totalCourses: number;
+//   totalStudents: number;
+//   totalEnrollments: number;
+//   courses: CourseResponse[];
+// }
 
 export default function AdminDashboard() {
-  const [stats, setStats] = useState<DashboardState>({
+  const [stats, setStats] = useState<StatsApiResponse>({
     totalCourses: 0,
     totalStudents: 0,
     totalEnrollments: 0,

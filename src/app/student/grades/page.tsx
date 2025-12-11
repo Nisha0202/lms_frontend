@@ -3,23 +3,8 @@
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
 import { Loader2, FileText, CheckCircle, XCircle } from "lucide-react";
+import type { GradeData } from "@/types";
 
-// --- Types ---
-interface Lesson {
-  _id: string;
-  title: string;
-}
-
-interface GradeData {
-  assignments: {
-    _id: string;
-    lesson: Lesson | null; 
-    grade?: number;
-    feedback?: string;
-    createdAt: string;
-  }[];
-  // Removed quizzes from interface
-}
 
 export default function MyGradesPage() {
   const [assignments, setAssignments] = useState<GradeData['assignments']>([]);
