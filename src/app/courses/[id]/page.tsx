@@ -93,7 +93,7 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
                 ))}
               </div>
             </div>
-          
+
             {/* Admin Edit Link */}
             <Link href={`/admin/courses/edit/${course._id}`}>edit course</Link>
 
@@ -127,9 +127,9 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
                   </div>
 
                   {/* Batch Selection & Enroll Button */}
-                  {/* We extract this to a Client Component because it needs useState */}
-                 
+
                   <EnrollmentButton
+                    price={course.price}
                     courseId={course._id}
                     batches={course.batches}
                   />
