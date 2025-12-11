@@ -10,7 +10,7 @@ import ConfirmToast from '@/components/ConfirmToast';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'LMS Platform',
+  title: 'Course Master',
   description: 'Learn online courses',
 };
 

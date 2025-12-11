@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: any = { // <--- The 'any' keyword shuts up all errors
+const nextConfig: any = { 
   typescript: {
     ignoreBuildErrors: true,
   },
