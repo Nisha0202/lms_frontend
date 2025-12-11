@@ -26,7 +26,7 @@ export default function RootLayout({
           <Navbar /> 
           <ToastProvider>
            
-          <main className="mb-8 sm:mb-16">
+          <main className="mb-6 sm:mb-12">
             {children}
           </main>
           </ToastProvider>
