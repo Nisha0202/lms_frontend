@@ -152,7 +152,7 @@ export default function LearningPage() {
 
   if (loading) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-zinc-50 gap-2">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 gap-2">
         <Loader2 className="animate-spin text-zinc-900" size={32} />
         <p className="text-zinc-500 text-sm">Loading classroom...</p>
       </div>
@@ -161,7 +161,7 @@ export default function LearningPage() {
 
   if (error) {
     return (
-      <div className="h-screen flex flex-col items-center justify-center bg-zinc-50 gap-4 p-4 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 gap-4 p-4 text-center">
         <AlertCircle className="text-red-500" size={48} />
         <h2 className="text-xl font-bold text-zinc-900">{error}</h2>
         <Link href="/student/dashboard" className="text-sm font-semibold text-zinc-600 hover:text-zinc-900 underline">
@@ -174,7 +174,7 @@ export default function LearningPage() {
   if (!course) return null;
 
   return (
-    <div className="flex h-screen bg-zinc-50 overflow-hidden text-zinc-900 relative">
+    <div className="flex min-h-screen bg-zinc-50 overflow-hidden text-zinc-900 relative">
       
       {/* 🔔 PRETTY TOAST NOTIFICATION */}
       {notification && (

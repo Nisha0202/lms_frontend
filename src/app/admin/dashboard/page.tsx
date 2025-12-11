@@ -98,7 +98,7 @@ export default function AdminDashboard() {
             <p className="text-zinc-500 text-sm">Welcome back, Admin.</p>
           </div>
           <Link
-            href="/admin/create-course"
+            href="/admin/courses/create-course"
             className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition-all shadow-sm active:scale-95"
           >
             <Plus size={18} /> Create New Course
@@ -121,7 +121,7 @@ export default function AdminDashboard() {
           {/* Card 2 (Clickable) */}
           <div className="bg-white cursor-pointer p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between hover:border-zinc-300 transition-colors group">
             <div>
-              <p className="text-sm font-medium text-zinc-500 group-hover:text-blue-600 transition">Total Registration4s</p>
+              <p className="text-sm font-medium text-zinc-500 group-hover:text-blue-600 transition">Total Registrations</p>
               <p className="text-3xl font-bold text-zinc-900 mt-1">{stats.totalStudents}</p>
             </div>
             <div className="h-12 w-12 bg-zinc-100 rounded-full flex items-center justify-center text-zinc-600 group-hover:bg-blue-50 group-hover:text-blue-600 transition">

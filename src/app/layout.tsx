@@ -20,13 +20,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`{inter.className}min-h-screen bg-gray-50 text-gray-800`}>
+      <body className={`${inter.className} min-h-screen bg-gray-50 text-gray-800`}>
         
         <AuthProvider>  
           <Navbar /> 
           <ToastProvider>
            
-          <main className="">
+          <main className="mb-8 sm:mb-16">
             {children}
           </main>
           </ToastProvider>

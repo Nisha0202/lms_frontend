@@ -24,7 +24,7 @@ interface Lesson {
   videoUrl: string;
   quizFormUrl: string;
   assignmentText: string;
-  isExpanded: boolean; // UI state only
+  isExpanded: boolean; 
 }
 
 interface CoursePayload {
@@ -258,6 +258,7 @@ export default function CreateCoursePage() {
                       <option>Design</option>
                       <option>Marketing</option>
                       <option>Business</option>
+                      <option>Development</option>
                       <option>Data Science</option>
                     </select>
                     <ChevronDown className="absolute right-3 top-3 text-zinc-400 pointer-events-none" size={16} />
