@@ -1,7 +1,7 @@
 
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Calendar, Users, PlayCircle, FileText, CheckCircle2, Lock } from "lucide-react";
+import { Users, PlayCircle, FileText, CheckCircle2, Lock } from "lucide-react";
 import EnrollmentButton from "@/components/EnrollmentButton"; // We will create this small helper
 import Link from "next/link";
 
@@ -94,9 +94,9 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
               </div>
             </div>
 
-            {/* Admin Edit Link */}
+            {/* Admin Edit Link
             <Link className="w-full sm:w-38 inline-flex items-center justify-center gap-2 bg-zinc-900 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition-all shadow-sm active:scale-95" 
-            href={`/admin/courses/edit/${course._id}`}>Edit Course</Link>
+            href={`/admin/courses/edit/${course._id}`}>Edit Course</Link> */}
 
 
           </div>
