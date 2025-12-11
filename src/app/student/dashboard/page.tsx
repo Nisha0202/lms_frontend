@@ -74,10 +74,10 @@ export default function StudentDashboardPage() {
             </p>
           </div>
           <Link 
-            href="/courses" 
-            className="inline-flex items-center justify-center gap-2 bg-white border border-zinc-200 text-zinc-700 px-5 py-2.5 rounded-xl font-medium hover:bg-zinc-50 transition-colors shadow-sm"
+            href="/student/grades" 
+            className="inline-flex items-center justify-center gap-2 bg-yellow-500 text-gray-900 px-4 text-sm font-medium hover:bg-yellow-600 transitionpx-5 py-2.5 rounded-xl transition-colors shadow-sm"
           >
-            <BookOpen size={18} /> Browse More Courses
+            <BookOpen size={18} /> Your Grades
           </Link>
         </div>
 
