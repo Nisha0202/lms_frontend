@@ -70,7 +70,7 @@ export default function ConfirmToast() {
             onClick={handleYes}
             className="px-5 py-2 rounded-lg text-sm font-medium bg-red-600 text-white hover:bg-red-700 shadow-sm transition-colors"
           >
-            Yes, Delete
+            Yes
           </button>
         </div>
       </div>

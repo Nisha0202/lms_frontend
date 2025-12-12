@@ -79,7 +79,7 @@ export default function AdminGradingPage() {
 
   return (
     <div className="min-h-screen bg-zinc-50 py-12 px-4 sm:px-6">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         
         {/* Header */}
         <div className="mb-8 flex flex-col gap-1">
