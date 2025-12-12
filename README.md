@@ -66,9 +66,12 @@ Open [http://localhost:3000](https://www.google.com/search?q=http://localhost:30
   └── types/            # TypeScript interfaces
   └── moddleware/            # Protect Routes
 ```
-## Standard successful payment
-Field,Value
-Card Number,4242 4242 4242 4242
-Expiry,"Any future date (e.g., 12/30)"
-CVC,"Any 3 digits (e.g., 123)"
-ZIP,"Any valid ZIP (e.g., 10001)"
+## 💳 Standard Successful Payment (Stripe Test Card)
+
+| Field        | Value                              |
+|--------------|-------------------------------------|
+| Card Number  | 4242 4242 4242 4242                 |
+| Expiry       | Any future date (e.g., 12/30)       |
+| CVC          | Any 3 digits (e.g., 123)            |
+| ZIP          | Any valid ZIP (e.g., 10001)         |
+
