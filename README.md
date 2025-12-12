@@ -2,16 +2,22 @@
 
 A modern, responsive learning platform built with Next.js 14 (App Router). This application provides a seamless experience for students to enroll in courses, consume video content, and track their grades, while offering admins powerful tools to manage the curriculum.
 
+## Live Link
+https://coursemaster-frontend-kappa-one.vercel.app
+
+
 ## ✨ Key Features
 
 -   **Modern UI/UX**: Built with Tailwind CSS and Lucide Icons for a clean, accessible interface.
 -   **Dashboard System**:
     -   **Student View**: Track enrolled courses, progress bars, and grades.
     -   **Admin View**: Manage courses, edit curriculum, and grade submissions.
+-   **User Administration**: Dedicated interface for admins to search users and manage access (Ban/Restore).
 -   **Interactive Learning**: Video player integration, assignment submission forms, and quiz interfaces.
 -   **Secure Payments**: Integrated Stripe Checkout flow.
 -   **Real-time Feedback**: Toast notifications for user actions (Success/Error states).
 -   **Responsive Design**: Fully optimized for desktop, tablet, and mobile devices.
+
 
 ## 🛠️ Tech Stack
 
@@ -21,6 +27,8 @@ A modern, responsive learning platform built with Next.js 14 (App Router). This 
 -   **Icons**: Lucide React
 -   **HTTP Client**: Axios
 -   **State Management**: React Context API & Hooks
+-   **Payments**: Stripe Elements (Frontend SDK)
+
 
 ## ⚙️ Environment Variables
 
