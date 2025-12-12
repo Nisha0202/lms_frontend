@@ -36,7 +36,7 @@ export interface CourseResponse {
   instructor?: { name: string; email: string }; // Optional
 }
 
-// You can also add payload types here
+
 export interface CoursePayload {
   title: string;
   description: string;

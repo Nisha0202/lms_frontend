@@ -90,8 +90,8 @@ export default function StudentCourseCard({ enrollment }: Props) {
               </div>
 
               <Link
-                // Note: Ensure this URL matches your actual file structure (e.g. /learn/course/[id])
-                href={`/learn/course/${course._id}`} 
+              
+                href={`/courses/learn/${course._id}`} 
                 className="mt-4 flex items-center justify-center gap-2 w-full bg-zinc-900 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 active:scale-[0.98] transition-all"
               >
                 <PlayCircle size={18} />
