@@ -25,7 +25,7 @@ export default async function HomePage() {
   const courses = await getFeaturedCourses();
 
   return (
-    <div className="flex flex-col min-h-screen bg-white font-sans text-zinc-900 selection:bg-yellow-200">
+    <div className="flex px-4 flex-col min-h-screen bg-white font-sans text-zinc-900 selection:bg-yellow-200">
 
       {/* ================= 1. HERO: SPLIT LAYOUT (Denser, less empty space) ================= */}
       <section className="border-b border-zinc-200 bg-zinc-50/50">
