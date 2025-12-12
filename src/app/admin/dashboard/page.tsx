@@ -116,10 +116,10 @@ export default function AdminDashboard() {
           {/* Card 2 (Clickable) */}
           <div className="bg-white cursor-pointer p-6 rounded-xl border border-zinc-200 shadow-sm flex items-center justify-between hover:border-zinc-300 transition-colors group">
             <div>
-              <p className="text-sm font-medium text-zinc-500 group-hover:text-blue-600 transition">Total Registrations</p>
+              <p className="text-sm font-medium text-zinc-500  transition">Total Registrations</p>
               <p className="text-3xl font-bold text-zinc-900 mt-1">{stats.totalStudents}</p>
             </div>
-            <div className="h-12 w-12 bg-zinc-100 rounded-full flex items-center justify-center text-zinc-600 group-hover:bg-blue-50 group-hover:text-blue-600 transition">
+            <div className="h-12 w-12 bg-zinc-100 rounded-full flex items-center justify-center text-zinc-600 group-hover:bg-blue-50 ">
               <Users size={24} />
             </div>
           </div>
