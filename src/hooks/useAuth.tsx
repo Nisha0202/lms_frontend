@@ -50,8 +50,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // 2. Redirect Logic (The Fix)
   useEffect(() => {
     // Only auto-redirect if the user is on a "Public" page (Login/Register/Home)
-    // If they are already on /admin/users, DO NOT touch them.
-    const publicPaths = ['/', '/login', '/register', '/signin'];
+    const publicPaths = ['/login', '/register', '/signin'];
     const isPublicPage = publicPaths.includes(pathname);
 
     if (!loading && isAuthenticated && user && isPublicPage) {
@@ -60,7 +59,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [loading, isAuthenticated, user, router, pathname]);
 
-  // ❌ DELETED THE DUPLICATE useEffect HERE ❌
+  
 
   const login = async (email: string, password: string) => {
     try {

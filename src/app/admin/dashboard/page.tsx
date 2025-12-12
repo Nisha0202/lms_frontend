@@ -6,7 +6,7 @@ import Image from "next/image";
 import api from "@/lib/api";
 import { 
   Plus, BookOpen, Users, DollarSign, 
-  ArrowRight, Loader2, MoreHorizontal, Settings
+  ArrowRight, Loader2,
 } from "lucide-react";
 import DashboardActions from "@/components/DashboardActions";
 import type { CourseResponse, StatsApiResponse } from "@/types";
@@ -82,8 +82,8 @@ export default function AdminDashboard() {
             label="Total Courses" 
             value={stats.totalCourses} 
             icon={<BookOpen size={20} />} 
-            linkHref="/admin/courses"
-            linkText="Manage Courses"
+            linkHref="/admin/dasboard"
+            linkText=" "
           />
           <MetricCard 
             label="Registered Students" 
@@ -215,7 +215,7 @@ function MetricCard({ label, value, icon, linkHref, linkText }: any) {
           href={linkHref} 
           className="flex items-center justify-center gap-1 text-xs font-semibold text-zinc-600 hover:text-zinc-900 transition-colors w-full py-1"
         >
-          {linkText} <ArrowRight size={12} />
+          {linkText} 
         </Link>
       </div>
     </div>
