@@ -106,7 +106,7 @@ export default function AdminDashboard() {
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-zinc-900">Recent Courses</h2>
             <Link 
-              href="/admin/courses" 
+              href="/courses" 
               className="text-sm font-medium text-zinc-500 hover:text-zinc-900 flex items-center gap-1 transition-colors"
             >
               View Full Directory <ArrowRight size={14} />
@@ -173,9 +173,7 @@ export default function AdminDashboard() {
                           ৳ {course.price.toLocaleString()}
                         </td>
                         <td className="px-6 py-4 text-right">
-                          {/* FIX: Removed opacity-0. 
-                              DashboardActions is now always visible. 
-                          */}
+                  
                           <div className="flex justify-end">
                              <DashboardActions courseId={course._id} />
                           </div>
