@@ -6,12 +6,11 @@ import Image from "next/image";
 import api from "@/lib/api";
 import { 
   Plus, BookOpen, Users, DollarSign, 
-  ArrowRight, Loader2,
+  ArrowRight, Loader2, BarChart3, MoreVertical
 } from "lucide-react";
 import DashboardActions from "@/components/DashboardActions";
 import type { CourseResponse, StatsApiResponse } from "@/types";
 
-// Types
 interface CoursesApiResponse {
   courses: CourseResponse[];
   total: number;
@@ -51,130 +50,121 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 gap-4">
-        <Loader2 className="animate-spin text-zinc-900" size={32} />
-        <p className="text-zinc-500 font-medium text-sm">Loading Dashboard...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50/50">
+        <Loader2 className="animate-spin text-zinc-900" size={24} /> Loading
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-10 px-4 sm:px-6 lg:px-8 font-sans text-zinc-900">
-      <div className="max-w-7xl mx-auto space-y-10">
+    <div className="min-h-[80vh] bg-gray-50/50 py-8 px-4 sm:px-6 lg:px-8 font-sans text-zinc-900">
+      <div className="max-w-7xl mx-auto space-y-8">
         
-        {/* --- Header & Primary Action --- */}
+        {/* --- Header --- */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-zinc-900">Dashboard</h1>
-            <p className="text-zinc-500 mt-1">Overview of your academy's performance.</p>
+            <h1 className="text-2xl font-bold tracking-tight text-zinc-900">Overview</h1>
+            <p className="text-zinc-500 text-sm mt-1">Welcome back to your academy dashboard.</p>
           </div>
           <Link
             href="/admin/courses/create-course"
-            className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white px-5 py-3 rounded-lg text-sm font-semibold hover:bg-zinc-800 transition-all shadow-sm active:translate-y-0.5"
+            className="inline-flex items-center justify-center gap-2 bg-zinc-900 text-white px-4 py-2.5 rounded-lg text-sm font-medium hover:bg-zinc-800 transition-all shadow-sm active:scale-95"
           >
-            <Plus size={18} /> Create New Course
+            <Plus size={16} /> New Course
           </Link>
         </div>
 
-        {/* --- Metrics Overview (With Explicit Links) --- */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <MetricCard 
+        {/* --- Stats Grid --- */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <StatCard 
             label="Total Courses" 
             value={stats.totalCourses} 
-            icon={<BookOpen size={20} />} 
-            linkHref="/admin/dasboard"
-            linkText=" "
+            icon={BookOpen}
+            href="#"
           />
-          <MetricCard 
-            label="Registered Students" 
+          <StatCard 
+            label="Total Students" 
             value={stats.totalStudents} 
-            icon={<Users size={20} />} 
-            linkHref="/admin/users"
-            linkText="View All Users"
+            icon={Users}
+            href="/admin/users"
           />
-          <MetricCard 
+          <StatCard 
             label="Total Enrollments" 
             value={stats.totalEnrollments} 
-            icon={<DollarSign size={20} />} 
-            linkHref="/admin/enrollments"
-            linkText="View Transactions"
+            icon={BarChart3}
+            href="/admin/enrollments"
           />
         </div>
 
-        {/* --- Main Content Area --- */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-zinc-900">Recent Courses</h2>
+        {/* --- Recent Courses Table --- */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <h2 className="text-lg font-semibold text-zinc-900">Recent Courses</h2>
             <Link 
               href="/courses" 
-              className="text-sm font-medium text-zinc-500 hover:text-zinc-900 flex items-center gap-1 transition-colors"
+              className="text-sm text-zinc-500 hover:text-zinc-900 flex items-center gap-1 transition-colors"
             >
-              View Full Directory <ArrowRight size={14} />
+              View all <ArrowRight size={14} />
             </Link>
           </div>
 
           <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-            <div className="overflow-x-auto">
-              {stats.courses.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <div className="bg-zinc-50 p-4 rounded-full mb-3 border border-zinc-100">
-                    <BookOpen className="text-zinc-300" size={24} />
-                  </div>
-                  <p className="text-zinc-900 font-medium">No courses found</p>
-                  <p className="text-zinc-500 text-sm mt-1 mb-4 max-w-xs">
-                    Get started by creating your first course curriculum.
-                  </p>
-                  <Link href="/admin/courses/create-course" className="text-sm font-semibold text-blue-600 hover:underline">
-                    Create Course &rarr;
-                  </Link>
+            {stats.courses.length === 0 ? (
+              <div className="text-center py-16 px-4">
+                <div className="bg-zinc-100 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <BookOpen className="text-zinc-400" size={20} />
                 </div>
-              ) : (
+                <h3 className="text-zinc-900 font-medium">No courses yet</h3>
+                <p className="text-zinc-500 text-sm mt-1 mb-4">Create your first course to get started.</p>
+                <Link href="/admin/courses/create-course" className="text-sm font-medium text-blue-600 hover:underline">
+                  Create Course
+                </Link>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                  <thead className="bg-zinc-50/80 border-b border-zinc-200 text-zinc-500 uppercase text-xs font-semibold">
+                  <thead className="bg-zinc-50/50 border-b border-zinc-100 text-zinc-500 font-medium">
                     <tr>
-                      <th className="px-6 py-4 w-[40%]">Course Name</th>
-                      <th className="px-6 py-4">Category</th>
-                      <th className="px-6 py-4">Price</th>
-                      <th className="px-6 py-4 text-right">Actions</th>
+                      <th className="px-6 py-3">Course</th>
+                      <th className="px-6 py-3">Category</th>
+                      <th className="px-6 py-3">Price</th>
+                      <th className="px-6 py-3 text-right">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-zinc-100">
                     {stats.courses.map((course) => (
-                      <tr key={course._id} className="hover:bg-zinc-50 transition-colors">
+                      <tr key={course._id} className="group hover:bg-zinc-50/50 transition-colors">
                         <td className="px-6 py-4">
-                          <div className="flex items-center gap-4">
-                            <div className="relative h-12 w-20 bg-zinc-100 rounded-md overflow-hidden shrink-0 border border-zinc-200">
+                          <div className="flex items-center gap-3">
+                            <div className="relative h-10 w-16 bg-zinc-100 rounded border border-zinc-200 overflow-hidden shrink-0">
                               {course.thumbnail ? (
                                 <Image
                                   src={course.thumbnail}
-                                  alt={course.title}
+                                  alt=""
                                   fill
                                   className="object-cover"
                                   unoptimized={course.thumbnail?.startsWith("http")}
                                 />
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center bg-zinc-100 text-zinc-300">
-                                  <BookOpen size={16} />
+                                <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                                  <BookOpen size={14} />
                                 </div>
                               )}
                             </div>
-                            <div className="min-w-0">
-                              <p className="font-semibold text-zinc-900 line-clamp-1 text-base">{course.title}</p>
-                              <p className="text-xs text-zinc-500 mt-0.5 font-mono text-[10px] uppercase">ID: {course._id.slice(-6)}</p>
+                            <div>
+                              <p className="font-medium text-zinc-900 truncate max-w-[200px]">{course.title}</p>
+                              <p className="text-xs text-zinc-500 font-mono mt-0.5">{course._id.slice(-6)}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4">
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-zinc-100 text-zinc-700 border border-zinc-200">
-                            {course.category}
-                          </span>
+                        <td className="px-6 py-4 text-zinc-600">
+                          {course.category}
                         </td>
-                        <td className="px-6 py-4 font-medium text-zinc-900 tabular-nums">
-                          ৳ {course.price.toLocaleString()}
+                        <td className="px-6 py-4 font-medium text-zinc-900">
+                          ৳{course.price.toLocaleString()}
                         </td>
                         <td className="px-6 py-4 text-right">
-                  
-                          <div className="flex justify-end">
+                          <div className="flex justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                              <DashboardActions courseId={course._id} />
                           </div>
                         </td>
@@ -182,8 +172,8 @@ export default function AdminDashboard() {
                     ))}
                   </tbody>
                 </table>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -192,30 +182,20 @@ export default function AdminDashboard() {
   );
 }
 
-// --- Redesigned Card Component ---
-// Now separates the "Stat" from the "Action Link" clearly
-function MetricCard({ label, value, icon, linkHref, linkText }: any) {
+// Minimalist Stat Card
+function StatCard({ label, value, icon: Icon, href }: any) {
   return (
-    <div className="bg-white rounded-xl border border-zinc-200 shadow-sm flex flex-col">
-      <div className="p-6 pb-2">
-        <div className="flex items-center justify-between mb-4">
-          <div className="h-10 w-10 bg-zinc-50 rounded-lg flex items-center justify-center text-zinc-500 border border-zinc-100">
-            {icon}
-          </div>
-          <span className="text-3xl font-bold text-zinc-900 tracking-tight">{value}</span>
+    <Link href={href} className="group block p-6 bg-white rounded-xl border border-zinc-200 shadow-sm hover:border-zinc-300 hover:shadow-md transition-all duration-200">
+      <div className="flex items-center justify-between mb-4">
+        <div className="p-2 bg-zinc-50 rounded-lg text-zinc-500 group-hover:text-zinc-900 group-hover:bg-zinc-100 transition-colors">
+          <Icon size={20} />
         </div>
-        <p className="text-sm font-medium text-zinc-500">{label}</p>
+        <ArrowRight size={16} className="text-zinc-300 group-hover:text-zinc-500 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
       </div>
-      
-      {/* Explicit Footer Link */}
-      <div className="mt-auto border-t border-zinc-100 p-3 bg-zinc-50/50 rounded-b-xl">
-        <Link 
-          href={linkHref} 
-          className="flex items-center justify-center gap-1 text-xs font-semibold text-zinc-600 hover:text-zinc-900 transition-colors w-full py-1"
-        >
-          {linkText} 
-        </Link>
+      <div>
+        <div className="text-3xl font-bold text-zinc-900 tracking-tight">{value}</div>
+        <div className="text-sm font-medium text-zinc-500 mt-1">{label}</div>
       </div>
-    </div>
+    </Link>
   );
 }
