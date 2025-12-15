@@ -1,20 +1,56 @@
 import Link from 'next/link';
-
+import { GraduationCap } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-400 py-12  mt-auto ">
-      <div className="container mx-auto text-center">
-        <h3 className="text-white text-xl font-bold mb-4">CourseMaster</h3>
-        <p className="mb-8 max-w-md mx-auto text-gray-300">
-          Empowering students with accessible education. Built with Next.js, Node.js, and MongoDB.
-        </p>
-        <div className="flex flex-col sm:flex-row justify-center gap-6 text-sm">
-          <Link href="#" className="hover:text-white">Privacy Policy</Link>
-          <Link href="#" className="hover:text-white">Terms of Service</Link>
-          <Link href="#" className="hover:text-white">Support</Link>
+    // 1. BACKGROUND: Deep warm stone instead of cold gray
+    // 2. BRAND STRIPE: The orange top border adds a premium 'University' feel
+    <footer className="bg-stone-900 border-t-4 border-orange-700 text-stone-400 py-16 mt-auto">
+      
+      <div className="container mx-auto px-4">
+        <div className="flex flex-col items-center text-center">
+          
+          {/* LOGO & ICON */}
+          <div className="flex items-center gap-2 mb-6">
+            <div className="bg-stone-800 p-2 rounded-lg text-orange-600">
+               <GraduationCap size={24} />
+            </div>
+            {/* Serif font applied here to match Navbar */}
+            <span className="text-2xl font-serif font-bold text-stone-100 tracking-tight">
+              CourseMaster
+            </span>
+          </div>
+
+          {/* MISSION STATEMENT */}
+          <p className="mb-8 max-w-md mx-auto text-stone-400 leading-relaxed text-sm">
+            Empowering students with accessible education through connection, 
+            mercy, and gratitude. Built for the modern learner.
+          </p>
+
+          {/* NAVIGATION LINKS */}
+          <div className="flex flex-wrap justify-center gap-x-8 gap-y-4 text-sm font-medium mb-12">
+            <Link href="#" className="text-stone-300 hover:text-orange-500 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="#" className="text-stone-300 hover:text-orange-500 transition-colors">
+              Terms of Service
+            </Link>
+            <Link href="#" className="text-stone-300 hover:text-orange-500 transition-colors">
+              Support
+            </Link>
+            <Link href="#" className="text-stone-300 hover:text-orange-500 transition-colors">
+              Teach on CourseMaster
+            </Link>
+          </div>
+
+          {/* DIVIDER */}
+          <div className="w-full max-w-xs h-px bg-stone-800 mb-8"></div>
+
+          {/* COPYRIGHT */}
+          <p className="text-xs text-stone-600">
+            &copy; {new Date().getFullYear()} CourseMaster LMS. All rights reserved.
+          </p>
         </div>
-        <p className="mt-8 text-xs">&copy; {new Date().getFullYear()} LMS Platform. All rights reserved.</p>
       </div>
     </footer>
   )

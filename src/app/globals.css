@@ -1,14 +1,42 @@
 @import "tailwindcss";
 
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- TYPOGRAPHY --- */
+  --font-main: var(--font-inter);
+  --font-serif: var(--font-playfair);
+
+  /* --- PALETTE: Warm & Intellectual --- */
+  
+  /* Primary: Burnt Clay / Terra Cotta (Warm, inviting, active) */
+  --primary: #C2410C;       
+  --primary-foreground: #FFFFFF;
+
+  /* Secondary: Sage (Calm, nature-inspired for success states) */
+  --secondary: #4D7C0F;     
+
+  /* Backgrounds: 'Paper' tones instead of cold grey */
+  --background: #FAFAF9;    /* Stone-50 (Warm off-white) */
+  --surface: #FFFFFF;       /* Pure white for cards */
+
+  /* Text: Soft Charcoal (Easier on eyes than black) */
+  --foreground: #292524;    /* Stone-800 */
+  --muted-foreground: #78716C; /* Stone-500 */
+
+  /* UI Accents */
+  --radius: 0.75rem;        /* 12px rounded corners */
+  --border: #E7E5E4;        /* Stone-200 */
 }
 
-
-
+/* Apply the variables to Tailwind classes */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-main);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif); /* Apply elegant font to headings */
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }

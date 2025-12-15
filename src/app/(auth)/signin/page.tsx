@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
-import { ArrowRight, Lock, Mail, Loader2 } from 'lucide-react';
+import { ArrowRight, Lock, Mail, Loader2, GraduationCap } from 'lucide-react';
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -25,38 +25,44 @@ export default function LoginPage() {
   };
 
   return (
-    // 1. BACKGROUND: Clean Zinc-50 background for contrast
-    <div className="flex min-h-[90vh] flex-col items-center justify-center bg-zinc-50 px-2 py-12 sm:px-6 lg:px-8">
+    // 1. BACKGROUND: Warm Stone-50 background for a 'paper' feel
+    <div className="flex min-h-[80vh] flex-col items-center justify-center bg-stone-50 px-4 py-12 sm:px-6 lg:px-8">
       
       {/* 2. HEADER: Branding above the form */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center mb-8">
-        <h2 className="text-3xl font-bold tracking-tight text-zinc-900">
+        {/* Added Icon for branding consistency */}
+        <div className="mx-auto h-12 w-12 bg-orange-100 text-orange-700 rounded-xl flex items-center justify-center mb-4">
+           <GraduationCap size={24} />
+        </div>
+        
+        {/* Serif font for the "University" feel */}
+        <h2 className="text-3xl font-serif font-bold tracking-tight text-stone-900">
           Welcome back
         </h2>
-        <p className="mt-2 text-sm text-zinc-600">
-          Sign in to your account to continue learning
+        <p className="mt-2 text-sm text-stone-600">
+          Sign in to your account to continue your studies
         </p>
       </div>
 
-      {/* 3. CARD: White background, subtle border, soft shadow */}
-      <div className="w-full max-w-md bg-white px-8 py-10 shadow-sm ring-1 ring-zinc-900/5 sm:rounded-xl">
+      {/* 3. CARD: White background with a warm top accent border */}
+      <div className="w-full max-w-md bg-white px-8 py-10 shadow-lg shadow-stone-200/50 rounded-xl border-t-4 border-orange-700 ring-1 ring-stone-900/5">
         <form className="space-y-6" onSubmit={handleSubmit}>
           
-          {/* Error Alert */}
+          {/* Error Alert - Warm Red */}
           {error && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-600 border border-red-100 flex items-center gap-2 animate-in fade-in slide-in-from-top-1">
-              <span className="font-medium">Error:</span> {error}
+            <div className="rounded-lg bg-red-50 p-4 text-sm text-red-700 border border-red-100 flex items-start gap-3 animate-in fade-in slide-in-from-top-1">
+              <span className="font-bold">Error:</span> {error}
             </div>
           )}
 
           {/* Email Input */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium leading-6 text-zinc-900">
+            <label htmlFor="email" className="block text-sm font-medium leading-6 text-stone-900">
               Email address
             </label>
             <div className="relative mt-2">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Mail className="h-5 w-5 text-zinc-400" />
+                <Mail className="h-5 w-5 text-stone-400" />
               </div>
               <input
                 id="email"
@@ -64,7 +70,8 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full rounded-md border-0 py-2.5 pl-10 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-900 sm:text-sm sm:leading-6 transition-all"
+                // Focus ring is now Orange to match brand
+                className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 sm:text-sm sm:leading-6 transition-all shadow-sm"
                 placeholder="you@example.com"
               />
             </div>
@@ -73,16 +80,16 @@ export default function LoginPage() {
           {/* Password Input */}
           <div>
             <div className="flex items-center justify-between">
-              <label htmlFor="password" className="block text-sm font-medium leading-6 text-zinc-900">
+              <label htmlFor="password" className="block text-sm font-medium leading-6 text-stone-900">
                 Password
               </label>
-              <Link href="#" className="text-sm font-semibold text-zinc-600 hover:text-zinc-900">
+              <Link href="#" className="text-sm font-semibold text-orange-700 hover:text-orange-800 hover:underline">
                 Forgot password?
               </Link>
             </div>
             <div className="relative mt-2">
               <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                <Lock className="h-5 w-5 text-zinc-400" />
+                <Lock className="h-5 w-5 text-stone-400" />
               </div>
               <input
                 id="password"
@@ -90,38 +97,40 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="block w-full rounded-md border-0 py-2.5 pl-10 text-zinc-900 ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-900 sm:text-sm sm:leading-6 transition-all"
+                className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone sm:text-sm sm:leading-6 transition-all shadow-sm"
                 placeholder="••••••••"
               />
             </div>
           </div>
 
-          {/* Submit Button */}
+          {/* Submit Button - The Main Brand Color */}
           <button
             type="submit"
             disabled={loading}
-            className="flex w-full justify-center items-center gap-2 rounded-md bg-zinc-900 px-3 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-zinc-900 disabled:opacity-70 disabled:cursor-not-allowed transition-all"
+            className="flex w-full justify-center items-center gap-2 rounded-lg bg-orange-700 px-3 py-3 text-sm font-bold text-white shadow-md hover:bg-orange-800 hover:shadow-lg focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-700 disabled:opacity-70 disabled:cursor-not-allowed transition-all active:scale-[0.98]"
           >
             {loading ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                Signing in...
+                Verifying Credentials...
               </>
             ) : (
               <>
-                Sign in <ArrowRight className="h-4 w-4" />
+                Sign in to Dashboard <ArrowRight className="h-4 w-4" />
               </>
             )}
           </button>
         </form>
 
         {/* Footer Link */}
-        <p className="mt-8 text-center text-sm text-zinc-500">
-          Not a member?{' '}
-          <Link href="/register" className="font-semibold text-zinc-900 hover:underline hover:text-zinc-700 transition">
-            Register
-          </Link>
-        </p>
+        <div className="mt-8 text-center text-sm">
+           <p className="text-stone-500">
+            Not a member?{' '}
+            <Link href="/register" className="font-bold text-orange-700 hover:text-orange-800 hover:underline transition">
+              Apply for admission
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );

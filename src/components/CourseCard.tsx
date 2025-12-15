@@ -1,27 +1,15 @@
-
 import Image from "next/image";
 import Link from "next/link";
 import { Tag, ArrowRight } from "lucide-react";
 
-import type { CourseResponse} from "@/types";
-
-// interface CourseProps {
-//   _id: string;
-//   title: string;
-//   thumbnail: string;
-//   category: string;
-//   price: number;
-//   description?: string;
-// }
+import type { CourseResponse } from "@/types";
 
 export default function CourseCard({ course }: { course: CourseResponse }) {
-
-
   return (
-    <div className="group flex flex-col h-full bg-white rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 overflow-hidden">
+    <div className="group flex flex-col h-full bg-white rounded-xl shadow-sm border border-stone-200 hover:shadow-md hover:border-orange-200 transition-all duration-300 overflow-hidden">
       
-      {/* Image */}
-      <div className="relative w-full h-48 bg-zinc-100 overflow-hidden">
+      {/* Image Container */}
+      <div className="relative w-full h-48 bg-stone-100 overflow-hidden">
         <Image
           src={course.thumbnail}
           alt={course.title}
@@ -30,9 +18,9 @@ export default function CourseCard({ course }: { course: CourseResponse }) {
           unoptimized={course.thumbnail?.startsWith("http")}
         />
 
-        {/* Price */}
-        <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm border border-zinc-200">
-          <span className="text-sm font-bold text-zinc-900">
+        {/* Price Badge */}
+        <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-sm px-3 py-1 rounded-full shadow-sm border border-stone-200">
+          <span className="text-sm font-bold text-stone-900">
             ৳ {course.price}
           </span>
         </div>
@@ -41,19 +29,19 @@ export default function CourseCard({ course }: { course: CourseResponse }) {
       {/* Content */}
       <div className="p-5 flex flex-col grow space-y-4">
 
-        {/* Category */}
-        <span className="inline-flex items-center gap-1.5 text-xs font-medium bg-zinc-100 text-zinc-600 px-2.5 py-1 rounded-md border border-zinc-200">
+        {/* Category Tag */}
+        <span className="inline-flex w-fit items-center gap-1.5 text-xs font-medium bg-stone-100 text-stone-600 px-2.5 py-1 rounded-md border border-stone-200">
           <Tag className="w-3 h-3" />
           {course.category}
         </span>
 
         {/* Title */}
-        <h2 className="text-lg font-bold text-zinc-900 line-clamp-2">
+        <h2 className="text-lg font-bold text-stone-900 line-clamp-2 group-hover:text-orange-700 transition-colors">
           {course.title}
         </h2>
 
         {/* Description */}
-        <p className="text-sm text-zinc-500 line-clamp-2 grow">
+        <p className="text-sm text-stone-500 line-clamp-2 grow">
           {course.description || "No description provided."}
         </p>
 
@@ -61,7 +49,8 @@ export default function CourseCard({ course }: { course: CourseResponse }) {
         <div className="mt-auto pt-2">
           <Link
             href={`/courses/${course._id}`}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-zinc-800"
+            // Button: Dark Stone by default, turns Orange on hover
+            className="flex w-full items-center justify-center gap-2 rounded-lg bg-stone-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-orange-700 transition-colors"
           >
             View Details  
             <ArrowRight className="w-4 h-4" />
