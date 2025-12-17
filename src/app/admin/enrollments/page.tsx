@@ -3,125 +3,150 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
-import { ArrowLeft, Search, Loader2, User, BookOpen, Calendar, Mail } from "lucide-react";
+import { ArrowLeft, Search, Loader2, User, BookOpen, Calendar, Mail, GraduationCap } from "lucide-react";
 import { EnrollmentData } from "@/types";
 
-
 export default function AdminEnrollmentsPage() {
-    const [enrollments, setEnrollments] = useState<EnrollmentData[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [search, setSearch] = useState("");
+  const [enrollments, setEnrollments] = useState<EnrollmentData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                
-                const res = await api.get<EnrollmentData[]>("/enrollments/admin/all-enroll");
-                setEnrollments(res.data);
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const res = await api.get<EnrollmentData[]>("/enrollments/admin/all-enroll");
+        setEnrollments(res.data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, []);
 
-    // Filter logic for search bar
-    const filtered = enrollments.filter(
-        (e) =>
-            e.studentName.toLowerCase().includes(search.toLowerCase()) ||
-            e.courseTitle.toLowerCase().includes(search.toLowerCase())
-    );
+  const filtered = enrollments.filter(
+    (e) =>
+      e.studentName.toLowerCase().includes(search.toLowerCase()) ||
+      e.courseTitle.toLowerCase().includes(search.toLowerCase())
+  );
 
-    return (
-        <div className="min-h-screen bg-zinc-50 py-12 px-4 sm:px-6">
-            <div className="max-w-6xl mx-auto">
+  return (
+    <div className="min-h-screen bg-stone-50 py-12 px-4 sm:px-6 font-sans text-stone-900">
+      <div className="max-w-6xl mx-auto space-y-8">
 
-                {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                    <div>
-                        <Link href="/admin/dashboard" className="flex items-center text-sm text-zinc-500 hover:text-zinc-900 transition-colors mb-2">
-                            <ArrowLeft className="w-4 h-4 mr-1" /> Back to Dashboard
-                        </Link>
-                        <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">Student Enrollments</h1>
-                        <p className="text-zinc-500 mt-1">View and manage all student enrollments across batches.</p>
-                    </div>
-                </div>
-
-                {/* Search Bar */}
-                <div className="bg-white border border-zinc-200 rounded-xl p-4 shadow-sm mb-6 flex items-center gap-3">
-                    <Search className="text-zinc-400" size={20} />
-                    <input
-                        type="text"
-                        placeholder="Search by student or course name..."
-                        className="flex-1 outline-none text-zinc-900 placeholder:text-zinc-400"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                    />
-                </div>
-
-                {/* Table / List */}
-                {loading ? (
-                    <div className="flex justify-center py-20">
-                        <Loader2 className="animate-spin text-zinc-400" size={32} />
-                    </div>
-                ) : filtered.length === 0 ? (
-                    <div className="text-center py-20 text-zinc-500 bg-white border border-zinc-200 rounded-xl border-dashed">
-                        No enrollments found.
-                    </div>
-                ) : (
-                    <div className="bg-white border border-zinc-200 rounded-xl shadow-sm overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left text-sm">
-                                <thead className="bg-zinc-50 border-b border-zinc-100 text-zinc-500 uppercase text-xs font-semibold">
-                                    <tr>
-                                        <th className="px-6 py-4">Student</th>
-                                        <th className="px-6 py-4">Course</th>
-                                        <th className="px-6 py-4">Batch</th>
-                                        <th className="px-6 py-4">Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody className="divide-y divide-zinc-100 text-zinc-700">
-                                    {filtered.map((item) => (
-                                        <tr key={item._id} className="hover:bg-zinc-50/50 transition">
-                                            <td className="px-6 py-4">
-                                                <div className="flex flex-col">
-                                                    <span className="font-semibold text-zinc-900 flex items-center gap-2">
-                                                        <User size={14} className="text-zinc-400" />
-                                                        {item.studentName}
-                                                    </span>
-                                                    <span className="text-zinc-500 text-xs flex items-center gap-2 mt-1">
-                                                        <Mail size={12} />
-                                                        {item.studentEmail}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 font-medium">
-                                                <div className="flex items-center gap-2">
-                                                    <BookOpen size={16} className="text-zinc-400" />
-                                                    {item.courseTitle}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <span className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md text-xs font-medium border border-blue-100">
-                                                    {item.batchName}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 text-zinc-500 text-xs">
-                                                <div className="flex items-center gap-2">
-                                                    <Calendar size={14} />
-                                                    {new Date(item.enrolledAt).toLocaleDateString()}
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                )}
+        {/* --- Header Section --- */}
+        <div>
+          <Link 
+            href="/admin/dashboard" 
+            className="inline-flex items-center text-sm font-bold text-stone-500 hover:text-orange-700 transition-colors mb-6 group"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" /> Back to Dashboard
+          </Link>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-stone-200 pb-6">
+            <div>
+              <div className="flex items-center gap-2 text-orange-700 mb-2">
+                <GraduationCap size={20} />
+                <span className="text-xs font-bold tracking-widest uppercase">Registry</span>
+              </div>
+              <h1 className="text-3xl font-serif font-bold text-stone-900 tracking-tight">Student Enrollments</h1>
+              <p className="text-stone-500 mt-2 text-lg font-light">
+                Master list of all students registered across active curriculums.
+              </p>
             </div>
+            
+            {/* Search Input */}
+            <div className="relative w-full md:w-96">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-stone-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search student or course..."
+                className="block w-full pl-10 pr-3 py-3 border border-stone-300 rounded-md leading-5 bg-white placeholder-stone-400 focus:outline-none focus:border-orange-700 focus:ring-1 focus:ring-orange-700 sm:text-sm shadow-sm transition-all"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
-    );
+
+        {/* --- Table Section --- */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24 text-stone-500">
+            <Loader2 className="animate-spin text-orange-700 mb-4" size={32} />
+            <p className="font-serif text-lg">Retrieving records...</p>
+          </div>
+        ) : filtered.length === 0 ? (
+          <div className="text-center py-24 bg-white rounded-lg border border-stone-200 border-dashed">
+            <div className="bg-stone-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+              <User className="text-stone-300" size={24} />
+            </div>
+            <p className="text-stone-900 font-serif text-xl font-bold">No enrollments found</p>
+            <p className="text-stone-500 mt-2">Adjust your search or wait for new students.</p>
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow-sm border border-stone-200 overflow-hidden ring-1 ring-black/5">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead className="bg-stone-100/80 border-b border-stone-200 text-stone-600 uppercase text-xs font-bold tracking-wider">
+                  <tr>
+                    <th className="px-6 py-4">Student Profile</th>
+                    <th className="px-6 py-4">Course Enrolled</th>
+                    <th className="px-6 py-4">Batch Allocation</th>
+                    <th className="px-6 py-4">Registration Date</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-stone-100">
+                  {filtered.map((item) => (
+                    <tr key={item._id} className="hover:bg-orange-50/20 transition-colors group">
+                      {/* Student Column */}
+                      <td className="px-6 py-5">
+                        <div className="flex flex-col">
+                          <span className="font-serif font-bold text-stone-900 text-base flex items-center gap-2 group-hover:text-orange-800 transition-colors">
+                            {item.studentName}
+                          </span>
+                          <span className="text-stone-500 text-xs flex items-center gap-1.5 mt-1 font-mono">
+                            <Mail size={12} className="text-stone-400" />
+                            {item.studentEmail}
+                          </span>
+                        </div>
+                      </td>
+
+                      {/* Course Column */}
+                      <td className="px-6 py-5">
+                        <div className="flex items-center gap-2 font-medium text-stone-700">
+                          <BookOpen size={16} className="text-orange-700/60" />
+                          {item.courseTitle}
+                        </div>
+                      </td>
+
+                      {/* Batch Column */}
+                      <td className="px-6 py-5">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-stone-100 text-stone-700 border border-stone-200 shadow-sm">
+                          {item.batchName}
+                        </span>
+                      </td>
+
+                      {/* Date Column */}
+                      <td className="px-6 py-5 text-stone-500 text-xs font-medium tabular-nums">
+                        <div className="flex items-center gap-2">
+                          <Calendar size={14} className="text-stone-400" />
+                          {new Date(item.enrolledAt).toLocaleDateString(undefined, {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                          })}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
