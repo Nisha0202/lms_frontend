@@ -163,9 +163,7 @@ export default function EnrollmentButton({ courseId, batches, price }: { courseI
             ) : (
             <>
                 Enroll Now 
-                <span className="bg-orange-800/50 px-2 py-0.5 rounded text-sm font-normal group-hover:bg-orange-900/50 transition-colors">
-                    ৳{price}
-                </span>
+               
                 <CreditCard size={20} className="ml-1 opacity-80" /> 
             </>
             )}

@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import api from "@/lib/api";
 import { useAuth } from "@/hooks/useAuth";
-import { BookOpen, Loader2, ArrowRight, LayoutDashboard, FileText, CheckCircle, XCircle } from "lucide-react";
+import { 
+  BookOpen, Loader2, ArrowRight, LayoutDashboard, 
+  FileText, CheckCircle, Clock, GraduationCap 
+} from "lucide-react";
 import StudentCourseCard from "@/components/StudentCourseCard";
 import type { EnrolledCourse, GradeData } from "@/types";
-
-
 
 export default function StudentDashboardPage() {
   const { user } = useAuth();
@@ -26,7 +27,6 @@ export default function StudentDashboardPage() {
     const fetchAllData = async () => {
       try {
         setLoading(true);
-        // Run both requests in parallel for speed
         const [enrollRes, gradesRes] = await Promise.all([
           api.get<EnrolledCourse[]>("/enrollments/my-courses"),
           api.get<GradeData>("/assessments/my-grades")
@@ -46,49 +46,53 @@ export default function StudentDashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 text-zinc-500">
-        <Loader2 className="animate-spin mb-2" size={32} />
-        <p>Loading your learning dashboard...</p>
+      <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50 text-stone-500">
+        <Loader2 className="animate-spin text-orange-700 mb-4" size={32} />
+        <p className="font-serif text-lg">Loading your academy dashboard...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-zinc-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-stone-50 py-12 px-4 sm:px-6 lg:px-8 font-sans text-stone-900">
       <div className="max-w-7xl mx-auto">
         
         {/* === HEADER SECTION === */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 border-b border-stone-200 pb-8">
           <div>
-            <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">
-              Welcome back, {user?.name?.split(' ')[0]} 👋
+            <div className="flex items-center gap-2 text-orange-700 mb-2">
+              <GraduationCap size={20} />
+              <span className="text-xs font-bold tracking-widest uppercase">Student Portal</span>
+            </div>
+            <h1 className="text-4xl font-serif font-bold text-stone-900 tracking-tight">
+              Welcome back, {user?.name?.split(' ')[0]}
             </h1>
-            <p className="text-zinc-500 mt-1">
-              You are currently enrolled in <span className="font-semibold text-zinc-900">{enrollments.length}</span> active courses.
+            <p className="text-stone-500 mt-2 text-lg font-light">
+              You are currently enrolled in <span className="font-bold text-stone-900">{enrollments.length}</span> active courses.
             </p>
           </div>
 
-          {/* === MOVING TAB SWITCHER === */}
-          <div className="bg-white p-1.5 rounded-xl border border-zinc-200 flex items-center gap-1 shadow-sm w-fit">
+          {/* === TAB SWITCHER === */}
+          <div className="bg-stone-200/50 p-1 rounded-lg flex items-center gap-1 shadow-inner border border-stone-200/50 w-fit">
             <button
               onClick={() => setActiveTab('courses')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-bold transition-all duration-300 ${
                 activeTab === 'courses' 
-                  ? "bg-zinc-800 text-white shadow-md" 
-                  : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
+                  ? "bg-white text-stone-900 shadow-sm ring-1 ring-black/5" 
+                  : "text-stone-500 hover:text-stone-900 hover:bg-stone-200/50"
               }`}
             >
-              <BookOpen size={16} /> My Courses
+              <BookOpen size={16} className={activeTab === 'courses' ? "text-orange-700" : ""} /> My Courses
             </button>
             <button
               onClick={() => setActiveTab('grades')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+              className={`flex items-center gap-2 px-5 py-2.5 rounded-md text-sm font-bold transition-all duration-300 ${
                 activeTab === 'grades' 
-                  ? "bg-zinc-900 text-white shadow-md" 
-                  : "text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100"
+                  ? "bg-white text-stone-900 shadow-sm ring-1 ring-black/5" 
+                  : "text-stone-500 hover:text-stone-900 hover:bg-stone-200/50"
               }`}
             >
-              <FileText size={16} /> Gradebook
+              <FileText size={16} className={activeTab === 'grades' ? "text-orange-700" : ""} /> Gradebook
             </button>
           </div>
         </div>
@@ -101,7 +105,7 @@ export default function StudentDashboardPage() {
             enrollments.length === 0 ? (
               <EmptyState type="Courses" />
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {enrollments.map((e) => (
                   <StudentCourseCard key={e._id} enrollment={e} />
                 ))}
@@ -111,49 +115,52 @@ export default function StudentDashboardPage() {
 
           {/* --- VIEW 2: GRADES --- */}
           {activeTab === 'grades' && (
-            <div className="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-sm">
+            <div className="bg-white rounded-lg border border-stone-200 overflow-hidden shadow-sm">
               <table className="w-full text-left text-sm">
-                <thead className="bg-zinc-50 border-b border-zinc-200 text-zinc-500 uppercase text-xs tracking-wider">
+                <thead className="bg-stone-100/80 border-b border-stone-200 text-stone-600 font-bold uppercase text-xs tracking-wider">
                   <tr>
-                    <th className="p-5 font-semibold">Lesson Name</th>
-                    <th className="p-5 font-semibold">Submitted On</th>
-                    <th className="p-5 font-semibold text-right">Result</th>
+                    <th className="p-6">Assignment Details</th>
+                    <th className="p-6">Submission Date</th>
+                    <th className="p-6 text-right">Status & Result</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-100">
+                <tbody className="divide-y divide-stone-100">
                   {grades.length === 0 ? (
                     <tr>
-                      <td colSpan={3} className="p-12 text-center">
-                        <div className="flex flex-col items-center justify-center text-zinc-500">
-                          <XCircle size={32} className="text-zinc-300 mb-2" />
-                          <p className="font-medium">No assignments submitted yet.</p>
+                      <td colSpan={3} className="p-16 text-center">
+                        <div className="flex flex-col items-center justify-center text-stone-400">
+                          <LayoutDashboard size={48} className="text-stone-200 mb-4" />
+                          <h3 className="font-serif text-lg text-stone-900 font-medium">No records found</h3>
+                          <p className="mt-1">You haven't submitted any assignments yet.</p>
                         </div>
                       </td>
                     </tr>
                   ) : (
                     grades.map((sub) => (
-                      <tr key={sub._id} className="hover:bg-zinc-50/50 transition-colors">
-                        <td className="p-5">
-                          <p className="font-semibold text-zinc-900 text-base">
+                      <tr key={sub._id} className="hover:bg-orange-50/30 transition-colors group">
+                        <td className="p-6">
+                          <p className="font-serif font-bold text-stone-900 text-base group-hover:text-orange-700 transition-colors">
                             {sub.lesson?.title || <span className="text-red-400 italic">Deleted Lesson</span>}
                           </p>
-                          {sub.feedback && (
-                            <p className="text-xs text-zinc-500 mt-1 max-w-md line-clamp-1 italic">
+                          {sub.feedback ? (
+                            <div className="mt-2 text-xs text-stone-500 italic bg-stone-50 p-2 rounded border border-stone-100 inline-block max-w-md">
                               "{sub.feedback}"
-                            </p>
+                            </div>
+                          ) : (
+                             <span className="text-xs text-stone-400 mt-1 block">No feedback provided yet.</span>
                           )}
                         </td>
-                        <td className="p-5 text-zinc-500 font-medium">
+                        <td className="p-6 text-stone-500 font-medium tabular-nums">
                           {new Date(sub.createdAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
                         </td>
-                        <td className="p-5 text-right">
+                        <td className="p-6 text-right">
                           {sub.grade !== undefined ? (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-700 border border-emerald-100 shadow-sm">
+                            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-100 font-mono">
                               <CheckCircle size={14} /> {sub.grade}/100
                             </span>
                           ) : (
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-100">
-                              <Loader2 size={12} className="animate-spin" /> Pending
+                            <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-50 text-amber-700 border border-amber-100 uppercase tracking-wide">
+                              <Clock size={14} /> Pending Review
                             </span>
                           )}
                         </td>
@@ -174,19 +181,19 @@ export default function StudentDashboardPage() {
 // Helper for Empty Courses State
 function EmptyState({ type }: { type: string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-20 bg-white rounded-2xl border border-zinc-200 border-dashed text-center">
-      <div className="h-16 w-16 bg-zinc-50 rounded-full flex items-center justify-center mb-4">
-        <LayoutDashboard className="text-zinc-300" size={32} />
+    <div className="flex flex-col items-center justify-center py-24 bg-white rounded-lg border border-stone-200 border-dashed text-center shadow-sm">
+      <div className="h-20 w-20 bg-stone-50 rounded-full flex items-center justify-center mb-6 border border-stone-100">
+        <BookOpen className="text-stone-300" size={32} />
       </div>
-      <h3 className="text-lg font-semibold text-zinc-900">No enrollments yet</h3>
-      <p className="text-zinc-500 max-w-sm mt-2 mb-6">
-        It looks like you haven't enrolled in any courses yet. Start your learning journey today!
+      <h3 className="text-2xl font-serif font-bold text-stone-900">No active enrollments</h3>
+      <p className="text-stone-500 max-w-md mt-2 mb-8 text-lg font-light">
+        You are not currently enrolled in any academic courses. Browse our catalog to begin.
       </p>
       <Link
         href="/courses"
-        className="bg-zinc-900 text-white px-6 py-3 rounded-xl font-medium hover:bg-zinc-800 transition-all flex items-center gap-2 shadow-lg shadow-zinc-200"
+        className="bg-stone-900 text-stone-50 px-8 py-3 rounded-md font-bold hover:bg-orange-700 transition-all flex items-center gap-2 shadow-lg shadow-stone-200"
       >
-        Explore Courses <ArrowRight size={18} />
+        View Course Catalog <ArrowRight size={18} />
       </Link>
     </div>
   );

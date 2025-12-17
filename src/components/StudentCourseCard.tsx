@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { PlayCircle, Users, Clock, Lock } from "lucide-react";
+import { PlayCircle, Users, Lock, BookOpen } from "lucide-react";
 
 interface Props {
   enrollment: {
@@ -22,86 +22,93 @@ export default function StudentCourseCard({ enrollment }: Props) {
   const { course, batchName, startDate, progress } = enrollment;
 
   // 1. LOGIC: Check if course has started
-  // If startDate is null, we assume it's open. Otherwise, compare with Today.
   const isStarted = startDate ? new Date(startDate) <= new Date() : true;
 
   return (
-    <div className="group flex flex-col bg-white border border-zinc-200 rounded-2xl overflow-hidden hover:shadow-xl hover:shadow-zinc-200/50 transition-all duration-300">
+    <div className="group flex flex-col bg-white border border-stone-200 rounded-lg overflow-hidden hover:shadow-lg hover:shadow-stone-200/50 transition-all duration-300 h-full">
 
       {/* Header (Thumbnail) */}
-      <div className="h-40 bg-zinc-900 relative p-6 overflow-hidden">
+      <div className="h-48 bg-stone-100 relative overflow-hidden border-b border-stone-100">
         {course.thumbnail ? (
           <div
-            className="absolute inset-0 bg-cover bg-center opacity-60 group-hover:scale-105 transition-transform duration-500"
+            className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
             style={{ backgroundImage: `url(${course.thumbnail})` }}
           />
         ) : (
-          <div className="absolute inset-0 bg-linear-to-br from-zinc-800 to-black opacity-50" />
+          <div className="absolute inset-0 flex items-center justify-center bg-stone-100 text-stone-300">
+            <BookOpen size={48} strokeWidth={1} />
+          </div>
         )}
-        <div className="absolute inset-0 bg-black/10"></div>
+        
+        {/* Dark overlay for contrast if needed, or subtle tint */}
+        <div className="absolute inset-0 bg-stone-900/10 group-hover:bg-stone-900/0 transition-colors duration-500"></div>
 
-        <span className="relative z-10 inline-block px-2.5 py-1 rounded-md text-[10px] font-bold uppercase bg-white/90 text-zinc-900 backdrop-blur-sm">
+        {/* Category Badge */}
+        <span className="absolute top-4 left-4 inline-block px-3 py-1 bg-white/95 backdrop-blur-md border border-stone-200 text-stone-900 text-[10px] font-bold uppercase tracking-widest shadow-sm">
           {course.category}
         </span>
       </div>
 
       {/* Body */}
       <div className="p-6 flex-1 flex flex-col">
-        <h3 className="text-lg font-bold text-zinc-900 line-clamp-1 mb-2">
+        {/* Batch Badge */}
+        <div className="flex items-center gap-2 mb-3">
+            <Users size={12} className="text-orange-700" />
+            <span className="text-[10px] font-bold text-stone-400 uppercase tracking-wider">{batchName}</span>
+        </div>
+
+        <h3 className="text-xl font-serif font-bold text-stone-900 leading-tight mb-4 group-hover:text-orange-700 transition-colors line-clamp-2">
           {course.title}
         </h3>
 
-        {/* Batch Badge */}
-        <div className="flex items-center gap-3 text-xs text-zinc-500 mb-6">
-          <div className="flex items-center gap-1.5 bg-zinc-50 px-2 py-1 rounded border border-zinc-100">
-            <Users size={12} />
-            <span className="font-medium text-zinc-700">{batchName}</span>
-          </div>
-        </div>
-
-        <div className="mt-auto space-y-3">
+        <div className="mt-auto space-y-5 pt-4 border-t border-stone-100">
           
-          {/* === CONDITIONAL RENDERING STARTS HERE === */}
+          {/* === CONDITIONAL RENDERING === */}
           
           {!isStarted ? (
-            // STATE 1: LOCKED (Course hasn't started)
-            <div className="bg-amber-50 border border-amber-100 rounded-xl p-3 flex flex-col items-center justify-center text-center gap-1">
-               <div className="flex items-center gap-2 text-amber-700 font-semibold text-xs">
-                  <Lock size={14} />
-                  <span>Access Locked</span>
+            // STATE 1: LOCKED
+            <div className="bg-stone-50 border border-stone-200 border-dashed rounded-md p-4 flex flex-col items-center justify-center text-center gap-2">
+               <div className="bg-white p-2 rounded-full border border-stone-200">
+                  <Lock size={16} className="text-stone-400" />
                </div>
-               <p className="text-[10px] text-amber-600">
-                 Starts on {new Date(startDate!).toLocaleDateString()}
-               </p>
+               <div>
+                 <p className="text-xs font-bold text-stone-900 uppercase tracking-wide">Access Locked</p>
+                 <p className="text-[10px] text-stone-500 font-medium">
+                   Opens on {new Date(startDate!).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}
+                 </p>
+               </div>
             </div>
           ) : (
-            // STATE 2: UNLOCKED (Progress Bar + Link)
+            // STATE 2: UNLOCKED
             <>
-              <div className="flex justify-between text-xs font-medium">
-                <span className="text-zinc-500">Course Progress</span>
-                <span className="text-zinc-900">{progress}%</span>
+              {/* Progress Section */}
+              <div className="space-y-2">
+                <div className="flex justify-between items-end">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-stone-400">Completion</span>
+                  <span className="text-sm font-bold text-stone-900 font-mono">{progress}%</span>
+                </div>
+
+                <div className="h-1.5 bg-stone-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-orange-700 rounded-full transition-all duration-1000 ease-out"
+                    style={{ width: `${progress}%` }}
+                  />
+                </div>
               </div>
 
-              <div className="h-2 bg-zinc-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-zinc-900 rounded-full transition-all duration-1000 ease-out"
-                  style={{ width: `${progress}%` }}
-                />
-              </div>
-
+              {/* Action Button */}
               <Link
-              
                 href={`/courses/learn/${course._id}`} 
-                className="mt-4 flex items-center justify-center gap-2 w-full bg-zinc-900 text-white py-3 rounded-xl text-sm font-semibold hover:bg-zinc-800 active:scale-[0.98] transition-all"
+                className="group/btn relative flex items-center justify-center gap-2 w-full bg-stone-900 text-stone-50 py-3.5 rounded-md text-xs font-bold uppercase tracking-widest hover:bg-orange-800 transition-all overflow-hidden"
               >
-                <PlayCircle size={18} />
-                {progress > 0 ? "Continue Learning" : "Start Course"}
+                <span className="relative z-10 flex items-center gap-2">
+                    <PlayCircle size={16} />
+                    {progress > 0 ? "Continue Course" : "Start Learning"}
+                </span>
               </Link>
             </>
           )}
           
-          {/* === CONDITIONAL RENDERING ENDS HERE === */}
-
         </div>
       </div>
     </div>
