@@ -194,9 +194,9 @@ export default function EditCoursePage() {
   if (loading || user?.role !== 'admin' || status === "loading_data") {
    
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-zinc-50 gap-4">
-        <Loader2 className="animate-spin text-zinc-900" size={32} />
-        <p className="text-zinc-500 font-medium text-sm">Loading Dashboard...</p>
+     <div className="min-h-screen flex flex-col items-center justify-center bg-stone-50 text-stone-600">
+        <Loader2 className="animate-spin text-orange-700" size={32} />
+        <p className="mt-4 font-serif text-lg">Loading Dashboard...</p>
       </div>
     );
   }

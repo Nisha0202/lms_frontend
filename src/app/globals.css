@@ -16,16 +16,16 @@
   --secondary: #4D7C0F;     
 
   /* Backgrounds: 'Paper' tones instead of cold grey */
-  --background: #FAFAF9;    /* Stone-50 (Warm off-white) */
-  --surface: #FFFFFF;       /* Pure white for cards */
+  --background: #FAFAF9;  
+  --surface: #FFFFFF;       
 
   /* Text: Soft Charcoal (Easier on eyes than black) */
-  --foreground: #292524;    /* Stone-800 */
-  --muted-foreground: #78716C; /* Stone-500 */
+  --foreground: #292524;   
+  --muted-foreground: #78716C; 
 
   /* UI Accents */
-  --radius: 0.75rem;        /* 12px rounded corners */
-  --border: #E7E5E4;        /* Stone-200 */
+  --radius: 0.75rem;        
+  --border: #E7E5E4;        
 }
 
 /* Apply the variables to Tailwind classes */
@@ -36,7 +36,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-serif); /* Apply elegant font to headings */
+  font-family: var(--font-serif); 
   font-weight: 700;
   letter-spacing: -0.02em;
 }

@@ -30,15 +30,14 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} ${playfair.variable}`}>
-      {/* 2. Added 'antialiased' for sharp text */}
-      {/* 3. Added flex/flex-col to ensure Footer stays at the bottom */}
-      <body className="flex flex-col min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-white">
+  
+      <body className="flex flex-col min-h-screen bg-background text-foreground antialiased selection:bg-primary selection:text-black">
         
         <AuthProvider>  
           <Navbar /> 
           
           <ToastProvider>
-            {/* 'flex-grow' pushes the footer down */}
+           
             <main className=" grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
               {children}
               <ConfirmToast />
