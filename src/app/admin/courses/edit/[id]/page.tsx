@@ -521,22 +521,36 @@ export default function EditCoursePage() {
                                                     />
                                                 </div>
 
-                                                {/* Video URL */}
-                                                <div>
-                                                    <label className="block text-sm font-medium leading-6 text-stone-900 mb-2">Video URL</label>
-                                                    <div className="relative">
-                                                        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                                                            <Video className="h-5 w-5 text-stone-400" />
-                                                        </div>
-                                                        <input
-                                                            required
-                                                            value={lesson.videoUrl}
-                                                            onChange={(e) => updateLesson(index, "videoUrl", e.target.value)}
-                                                            className="block w-full rounded-lg border-0 py-2.5 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white font-mono"
-                                                            placeholder="https://vimeo.com/..."
-                                                        />
-                                                    </div>
-                                                </div>
+                                          {/* Video URL */}
+<div>
+    <label className="block text-sm font-medium leading-6 text-stone-900 mb-2">Video URL</label>
+    <div className="relative">
+        <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+            <Video className="h-5 w-5 text-stone-400" />
+        </div>
+        
+        {/* REPLACED INPUT BELOW */}
+        <input
+            required
+            value={lesson.videoUrl}
+            onChange={(e) => {
+                let val = e.target.value;
+                // Auto-extract src from iframe code if detected
+                if (val.includes("<iframe")) {
+                    const match = val.match(/src\s*=\s*["']([^"']+)["']/);
+                    if (match && match[1]) {
+                        val = match[1];
+                    }
+                }
+                updateLesson(index, "videoUrl", val);
+            }}
+            className="block w-full rounded-lg border-0 py-2.5 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white font-mono"
+            placeholder="Paste  Embed Code..."
+        />
+         {/* END REPLACED INPUT */}
+
+    </div>
+</div>
 
                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                                     <div>
