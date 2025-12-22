@@ -192,7 +192,7 @@ export default function CreateCoursePage() {
                       type="text" 
                       value={form.title} 
                       onChange={(e) => updateField("title", e.target.value)} 
-                      className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm" 
+                      className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm" 
                       placeholder="e.g. Full Stack Web Development" 
                     />
                   </div>
@@ -206,7 +206,7 @@ export default function CreateCoursePage() {
                     rows={4} 
                     value={form.description} 
                     onChange={(e) => updateField("description", e.target.value)} 
-                    className="block w-full rounded-lg border-0 py-3 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm resize-none" 
+                    className="block w-full rounded-lg border-0 py-3 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm resize-none" 
                     placeholder="Course details..." 
                   />
                 </div>
@@ -218,7 +218,7 @@ export default function CreateCoursePage() {
                     <select 
                       value={form.category} 
                       onChange={(e) => updateField("category", e.target.value)} 
-                      className="block w-full rounded-lg border-0 py-3 pl-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm appearance-none"
+                      className="block w-full rounded-lg border-0 py-3 pl-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm appearance-none"
                     >
                       <option>Programming</option><option>Design</option><option>Marketing</option><option>Business</option>
                       <option>Data Science</option><option>Development</option>
@@ -240,7 +240,7 @@ export default function CreateCoursePage() {
                       min="1" 
                       value={form.price || ""} 
                       onChange={(e) => updateField("price", Number(e.target.value))} 
-                      className="block w-full rounded-lg border-0 py-3 pl-8 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm" 
+                      className="block w-full rounded-lg border-0 py-3 pl-8 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm" 
                       placeholder="5000" 
                     />
                   </div>
@@ -257,7 +257,7 @@ export default function CreateCoursePage() {
                       type="text" 
                       value={form.thumbnail} 
                       onChange={(e) => updateField("thumbnail", e.target.value)} 
-                      className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm" 
+                      className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm" 
                       placeholder="https://..." 
                     />
                   </div>
@@ -287,7 +287,7 @@ export default function CreateCoursePage() {
                       value={tagInput} 
                       onChange={(e) => setTagInput(e.target.value)} 
                       onKeyDown={handleAddTag} 
-                      className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm" 
+                      className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm" 
                       placeholder="Type tag and press Enter..." 
                     />
                   </div>
@@ -329,7 +329,7 @@ export default function CreateCoursePage() {
                         required 
                         value={batch.name} 
                         onChange={(e) => updateBatch(index, "name", e.target.value)} 
-                        className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
+                        className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
                       />
                     </div>
                     <div>
@@ -339,7 +339,7 @@ export default function CreateCoursePage() {
                         type="number" 
                         value={batch.seatLimit} 
                         onChange={(e) => updateBatch(index, "seatLimit", Number(e.target.value))} 
-                        className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
+                        className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
                       />
                     </div>
                     <div>
@@ -349,7 +349,7 @@ export default function CreateCoursePage() {
                         type="date" 
                         value={batch.startDate} 
                         onChange={(e) => updateBatch(index, "startDate", e.target.value)} 
-                        className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
+                        className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
                       />
                     </div>
                     <div>
@@ -359,7 +359,7 @@ export default function CreateCoursePage() {
                         type="date" 
                         value={batch.endDate} 
                         onChange={(e) => updateBatch(index, "endDate", e.target.value)} 
-                        className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
+                        className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
                       />
                     </div>
                   </div>
@@ -387,7 +387,7 @@ export default function CreateCoursePage() {
               {lessons.map((lesson, index) => (
                 <div 
                   key={index} 
-                  className={`rounded-xl border transition-all duration-300 ${lesson.isExpanded ? 'border-orange-200 ring-2 ring-orange-700/10 bg-white' : 'border-stone-200 bg-white hover:border-stone-300'}`}
+                  className={`rounded-xl border transition-all duration-300 ${lesson.isExpanded ? 'border-orange-200 ring-0 ring-orange-700/10 bg-white' : 'border-stone-200 bg-white hover:border-stone-300'}`}
                 >
                   <div 
                     className="flex items-center justify-between p-4 cursor-pointer select-none" 
@@ -430,7 +430,7 @@ export default function CreateCoursePage() {
                           required 
                           value={lesson.title} 
                           onChange={(e) => updateLesson(index, "title", e.target.value)} 
-                          className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
+                          className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
                           placeholder="e.g. Introduction to React" 
                         />
                       </div>
@@ -442,7 +442,7 @@ export default function CreateCoursePage() {
                           required 
                           value={lesson.videoUrl} 
                           onChange={(e) => updateLesson(index, "videoUrl", e.target.value)} 
-                          className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white font-mono" 
+                          className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white font-mono" 
                           placeholder="Paste YouTube link or Embed code here..." 
                         />
                       </div>
@@ -455,7 +455,7 @@ export default function CreateCoursePage() {
                           <input 
                             value={lesson.quizFormUrl} 
                             onChange={(e) => updateLesson(index, "quizFormUrl", e.target.value)} 
-                            className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
+                            className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
                             placeholder="Google Form Link" 
                           />
                         </div>
@@ -466,7 +466,7 @@ export default function CreateCoursePage() {
                           <input 
                             value={lesson.assignmentText} 
                             onChange={(e) => updateLesson(index, "assignmentText", e.target.value)} 
-                            className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
+                            className="block w-full rounded-lg border-0 py-2 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white" 
                             placeholder="What should they submit?" 
                           />
                         </div>

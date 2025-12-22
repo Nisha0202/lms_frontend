@@ -262,7 +262,7 @@ export default function EditCoursePage() {
                                     required
                                     value={form.title}
                                     onChange={(e) => updateField("title", e.target.value)}
-                                    className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
+                                    className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
                                     placeholder="Course Title"
                                 />
                             </div>
@@ -275,7 +275,7 @@ export default function EditCoursePage() {
                                 <select
                                     value={form.category}
                                     onChange={(e) => updateField("category", e.target.value)}
-                                    className="block w-full rounded-lg border-0 py-3 pl-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
+                                    className="block w-full rounded-lg border-0 py-3 pl-3 text-stone-900 ring-1 ring-inset ring-stone-300 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
                                 >
                                     <option>Programming</option>
                                     <option>Design</option>
@@ -294,7 +294,7 @@ export default function EditCoursePage() {
                                         required
                                         value={form.price}
                                         onChange={(e) => updateField("price", Number(e.target.value))}
-                                        className="block w-full rounded-lg border-0 py-3 pl-8 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
+                                        className="block w-full rounded-lg border-0 py-3 pl-8 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
                                     />
                                 </div>
                             </div>
@@ -308,7 +308,7 @@ export default function EditCoursePage() {
                                 rows={4}
                                 value={form.description}
                                 onChange={(e) => updateField("description", e.target.value)}
-                                className="block w-full rounded-lg border-0 py-3 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm resize-none"
+                                className="block w-full rounded-lg border-0 py-3 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm resize-none"
                             />
                         </div>
 
@@ -323,7 +323,7 @@ export default function EditCoursePage() {
                                     type="text"
                                     value={form.thumbnail}
                                     onChange={(e) => updateField("thumbnail", e.target.value)}
-                                    className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
+                                    className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
                                     placeholder="https://..."
                                 />
                              </div>
@@ -354,7 +354,7 @@ export default function EditCoursePage() {
                                     value={tagInput}
                                     onChange={(e) => setTagInput(e.target.value)}
                                     onKeyDown={handleAddTag}
-                                    className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
+                                    className="block w-full rounded-lg border-0 py-3 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm"
                                     placeholder="Add tag..."
                                 />
                             </div>
@@ -403,7 +403,7 @@ export default function EditCoursePage() {
                                             type="date"
                                             value={batch.startDate}
                                             onChange={(e) => updateBatch(index, "startDate", e.target.value)}
-                                            className="w-full mt-1 bg-white border-0 rounded ring-1 ring-inset ring-stone-300 py-1.5 px-2 text-stone-900 text-xs focus:ring-2 focus:ring-orange-700"
+                                            className="w-full mt-1 bg-white border-0 rounded ring-1 ring-inset ring-stone-300 py-1.5 px-2 text-stone-900 text-xs focus:ring-0 focus:ring-orange-700"
                                         />
                                     </div>
                                     <div>
@@ -412,7 +412,7 @@ export default function EditCoursePage() {
                                             type="date"
                                             value={batch.endDate}
                                             onChange={(e) => updateBatch(index, "endDate", e.target.value)}
-                                            className="w-full mt-1 bg-white border-0 rounded ring-1 ring-inset ring-stone-300 py-1.5 px-2 text-stone-900 text-xs focus:ring-2 focus:ring-orange-700"
+                                            className="w-full mt-1 bg-white border-0 rounded ring-1 ring-inset ring-stone-300 py-1.5 px-2 text-stone-900 text-xs focus:ring-0 focus:ring-orange-700"
                                         />
                                     </div>
                                 </div>
@@ -422,7 +422,7 @@ export default function EditCoursePage() {
                                         type="number"
                                         value={batch.seatLimit}
                                         onChange={(e) => updateBatch(index, "seatLimit", Number(e.target.value))}
-                                        className="w-20 ml-2 bg-white border-0 rounded ring-1 ring-inset ring-stone-300 py-1 px-2 text-center font-bold text-stone-900 text-xs focus:ring-2 focus:ring-orange-700"
+                                        className="w-20 ml-2 bg-white border-0 rounded ring-1 ring-inset ring-stone-300 py-1 px-2 text-center font-bold text-stone-900 text-xs focus:ring-0 focus:ring-orange-700"
                                     />
                                 </div>
                             </div>
@@ -459,7 +459,7 @@ export default function EditCoursePage() {
                         )}
 
                         {lessons.map((lesson, index) => (
-                            <div key={index} className={`rounded-xl border transition-all duration-300 ${lesson.isExpanded ? 'border-orange-200 ring-2 ring-orange-700/10 bg-white' : 'border-stone-200 bg-white hover:border-stone-300'}`}>
+                            <div key={index} className={`rounded-xl border transition-all duration-300 ${lesson.isExpanded ? 'border-orange-200 ring-0 ring-orange-700/10 bg-white' : 'border-stone-200 bg-white hover:border-stone-300'}`}>
                                 
                                 {/* Lesson Header */}
                                 <div
@@ -516,7 +516,7 @@ export default function EditCoursePage() {
                                                         required
                                                         value={lesson.title}
                                                         onChange={(e) => updateLesson(index, "title", e.target.value)}
-                                                        className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white"
+                                                        className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white"
                                                         placeholder="e.g. Introduction to React"
                                                     />
                                                 </div>
@@ -532,7 +532,7 @@ export default function EditCoursePage() {
                                                             required
                                                             value={lesson.videoUrl}
                                                             onChange={(e) => updateLesson(index, "videoUrl", e.target.value)}
-                                                            className="block w-full rounded-lg border-0 py-2.5 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white font-mono"
+                                                            className="block w-full rounded-lg border-0 py-2.5 pl-10 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white font-mono"
                                                             placeholder="https://vimeo.com/..."
                                                         />
                                                     </div>
@@ -544,7 +544,7 @@ export default function EditCoursePage() {
                                                         <input
                                                             value={lesson.quizFormUrl}
                                                             onChange={(e) => updateLesson(index, "quizFormUrl", e.target.value)}
-                                                            className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white"
+                                                            className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white"
                                                             placeholder="Optional"
                                                         />
                                                     </div>
@@ -553,7 +553,7 @@ export default function EditCoursePage() {
                                                         <input
                                                             value={lesson.assignmentText}
                                                             onChange={(e) => updateLesson(index, "assignmentText", e.target.value)}
-                                                            className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-2 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white"
+                                                            className="block w-full rounded-lg border-0 py-2.5 px-3 text-stone-900 ring-1 ring-inset ring-stone-300 placeholder:text-stone-400 focus:ring-0 focus:ring-inset focus:ring-orange-700 sm:text-sm sm:leading-6 shadow-sm bg-white"
                                                             placeholder="Instructions..."
                                                         />
                                                     </div>

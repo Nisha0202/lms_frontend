@@ -162,7 +162,7 @@ export default async function CourseDetails(props: { params: Promise<{ id: strin
                     <div className="p-1.5 bg-orange-100 text-orange-700 rounded-md">
                         <FileText size={16} />
                     </div>
-                    Source code & Assignments
+                    Quizs & Assignments
                   </li>
                 
                 </ul>
