@@ -10,8 +10,6 @@ export default function Navbar() {
 
   return (
     // NAVBAR CONTAINER
-    // Changed border color to warm stone-200
-    // kept backdrop-blur for modern feel, but strictly white background for cleanliness
     <nav className="sticky top-0 z-50 w-full border-b border-stone-200 bg-white/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
@@ -20,7 +18,7 @@ export default function Navbar() {
           <div className="shrink-0 flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2 group">
               <div className="bg-orange-700 text-white p-2 rounded-lg group-hover:bg-orange-800 transition-colors">
-                {/* Changed icon to GraduationCap for more academic feel */}
+               
                 <GraduationCap size={20} />
               </div>
               <div className="flex flex-col">
@@ -36,6 +34,12 @@ export default function Navbar() {
 
           {/* 2. DESKTOP NAVIGATION */}
           <div className="hidden md:flex items-center space-x-8">
+                 <Link
+              href="/about"
+              className="text-sm font-medium text-stone-600 hover:text-orange-700 transition-colors"
+            >
+              About
+            </Link>
             <Link
               href="/courses"
               className="text-sm font-medium text-stone-600 hover:text-orange-700 transition-colors"
@@ -123,13 +127,19 @@ export default function Navbar() {
       {isOpen && (
         <div className="md:hidden border-t border-stone-100 bg-white px-4 py-6 space-y-4 shadow-xl">
           <Link
+            href="/about"
+            className="block text-base font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 px-3 py-3 rounded-lg"
+            onClick={() => setIsOpen(false)}
+          >
+            About
+          </Link>
+  <Link
             href="/courses"
             className="block text-base font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-50 px-3 py-3 rounded-lg"
             onClick={() => setIsOpen(false)}
           >
             Browse Courses
           </Link>
-
           {!isAuthenticated ? (
             <div className="space-y-3 pt-4 border-t border-stone-100">
               <Link

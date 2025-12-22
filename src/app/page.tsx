@@ -1,7 +1,8 @@
 import Link from 'next/link';
 import { 
   BookOpen, Users, GraduationCap, 
-  ArrowRight, LayoutDashboard, Search 
+  ArrowRight, LayoutDashboard,
+  Target, Heart, Globe 
 } from 'lucide-react';
 import CourseCard from '@/components/CourseCard';
 
@@ -26,7 +27,6 @@ export default async function HomePage() {
     <div className="flex flex-col min-h-screen bg-stone-50 font-sans text-stone-900">
 
       {/* ================= 1. PORTAL HERO ================= */}
-      {/* Purpose: Immediate direction for Students vs New Visitors */}
       <section className="bg-white border-b border-stone-200 pt-16 pb-20 px-4">
         <div className="container mx-auto max-w-6xl">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -101,36 +101,21 @@ export default async function HomePage() {
       </section>
 
       {/* ================= 2. COURSE CATALOG PREVIEW ================= */}
-      {/* Purpose: Show what is available to enroll in */}
       <section className="py-20 px-4">
         <div className="container mx-auto max-w-6xl">
-          
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-10 gap-4">
             <div>
               <h2 className="text-2xl font-serif font-bold text-stone-900">Available Curricula</h2>
               <p className="text-stone-500">Select a course to view syllabus and enrollment options.</p>
             </div>
-            
-            {/* Search Bar Visual */}
-            <div className="relative w-full md:w-64">
-              <input 
-                type="text" 
-                placeholder="Search courses..." 
-                className="w-full pl-10 pr-4 py-2 bg-white border border-stone-300 rounded-lg text-sm focus:outline-none focus:border-orange-500"
-                disabled // Disabled for UI demo
-              />
-              <Search className="absolute left-3 top-2.5 text-stone-400" size={16} />
-            </div>
           </div>
 
-          {/* Grid */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {courses.length > 0 ? (
               courses.slice(0, 3).map((course: any) => (
                 <CourseCard key={course._id} course={course} />
               ))
             ) : (
-              // Empty State (Functional Fallback)
               <div className="col-span-3 py-12 text-center border border-dashed border-stone-300 rounded-lg bg-stone-50/50">
                 <p className="text-stone-500">No active courses found in the system.</p>
               </div>
@@ -145,12 +130,58 @@ export default async function HomePage() {
               View Full Directory <ArrowRight size={16} />
             </Link>
           </div>
+        </div>
+      </section>
 
+      {/* ================= 2.5 ABOUT US TEASER (NEW) ================= */}
+      <section className="py-20 bg-stone-900 text-white relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-stone-800/50 rounded-l-full blur-3xl -mr-32"></div>
+        
+        <div className="container mx-auto px-4 max-w-6xl relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            
+            {/* Text Content */}
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 text-orange-400 text-sm font-bold uppercase tracking-wider">
+                <Globe size={16} />
+                Our Mission
+              </div>
+              <h2 className="text-3xl md:text-4xl font-serif font-bold leading-tight">
+                Bridging the gap between <span className="text-orange-500">Potential</span> and <span className="text-orange-500">Performance</span>.
+              </h2>
+              <p className="text-stone-400 text-lg leading-relaxed">
+                We started CourseMaster with a simple belief: Quality education should be accessible, structured, and community-driven. We aren't just a platform; we are a collective of experts dedicated to your growth.
+              </p>
+              
+              <div className="pt-4">
+                <Link 
+                  href="/about" 
+                  className="inline-flex items-center gap-3 text-white font-semibold border-b border-orange-500 pb-1 hover:text-orange-400 transition-colors"
+                >
+                  Read Our Story <ArrowRight size={18} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Visual Grid */}
+            <div className="grid grid-cols-2 gap-4">
+               <div className="bg-stone-800 p-6 rounded-2xl border border-stone-700">
+                  <Target className="text-orange-500 mb-4" size={32} />
+                  <h4 className="font-bold text-lg mb-2">Purpose</h4>
+                  <p className="text-stone-400 text-sm">To provide industry-standard skills to everyone.</p>
+               </div>
+               <div className="bg-stone-800 p-6 rounded-2xl border border-stone-700 mt-8">
+                  <Heart className="text-orange-500 mb-4" size={32} />
+                  <h4 className="font-bold text-lg mb-2">Community</h4>
+                  <p className="text-stone-400 text-sm">Learning is better when we do it together.</p>
+               </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ================= 3. SYSTEM WORKFLOW ================= */}
-      {/* Purpose: Explain the LMS flow plainly */}
       <section className="py-16 bg-white border-t border-stone-200">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
