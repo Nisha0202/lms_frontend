@@ -1,10 +1,12 @@
 # 🎓 CourseMaster Frontend - Student & Admin Portal
 
-A modern, responsive learning platform built with Next.js 14 (App Router). This application provides a seamless experience for students to enroll in courses, consume video content, and track their grades, while offering admins powerful tools to manage the curriculum.
+A modern, responsive learning platform built with Next.js 15 (App Router). This application provides a seamless experience for students to enroll in courses, consume video content, and track their grades, while offering admins powerful tools to manage the curriculum.
 
 ## Live Link
 https://coursemaster-frontend-kappa-one.vercel.app
 
+## Github Backend
+https://github.com/Nisha0202/lms_backend
 
 ## ✨ Key Features
 
