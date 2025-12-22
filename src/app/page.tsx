@@ -2,7 +2,9 @@ import Link from 'next/link';
 import { 
   BookOpen, Users, GraduationCap, 
   ArrowRight, LayoutDashboard,
-  Target, Heart, Globe 
+  Target, Heart, Globe, 
+  Star,
+  Quote
 } from 'lucide-react';
 import CourseCard from '@/components/CourseCard';
 
@@ -133,7 +135,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ================= 2.5 ABOUT US TEASER (NEW) ================= */}
+      {/* ================= 3 ABOUT US TEASER  ================= */}
       <section className="py-20 bg-stone-900 text-white relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute top-0 right-0 w-1/2 h-full bg-stone-800/50 rounded-l-full blur-3xl -mr-32"></div>
@@ -181,7 +183,83 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ================= 3. SYSTEM WORKFLOW ================= */}
+      {/* ================= 4 SUCCESS STORIES (EXTRA) ================= */}
+      <section className="py-20 bg-orange-50 border-b border-orange-100">
+        <div className="container mx-auto max-w-6xl px-4">
+          
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <h2 className="text-3xl font-serif font-bold text-stone-900 mb-4">Trusted by Industry Professionals</h2>
+            <p className="text-stone-600 text-lg">
+              Don't just take our word for it. See how CourseMaster certifications are helping developers advance their careers.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Review Card 1 */}
+            <div className="bg-white p-8 rounded-xl border border-orange-100 shadow-sm relative">
+              <Quote className="absolute top-6 right-6 text-orange-100" size={40} />
+              <div className="flex gap-1 text-orange-500 mb-6">
+                {[1,2,3,4,5].map((i) => ( <Star key={i} size={16} fill="currentColor" /> ))}
+              </div>
+              <p className="text-stone-700 mb-6 relative z-10">
+                "The structured learning path helped me bridge the gap between junior and intermediate concepts. The system architecture modules are world-class."
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-stone-200 rounded-full flex items-center justify-center text-stone-500 font-bold text-xs">
+                  JD
+                </div>
+                <div>
+                  <div className="font-bold text-sm text-stone-900">James D.</div>
+                  <div className="text-xs text-stone-500">Full Stack Engineer</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Review Card 2 */}
+            <div className="bg-white p-8 rounded-xl border border-orange-100 shadow-sm relative">
+              <Quote className="absolute top-6 right-6 text-orange-100" size={40} />
+              <div className="flex gap-1 text-orange-500 mb-6">
+                {[1,2,3,4,5].map((i) => ( <Star key={i} size={16} fill="currentColor" /> ))}
+              </div>
+              <p className="text-stone-700 mb-6 relative z-10">
+                "I appreciate the no-nonsense approach to the assessments. It feels like a real university portal but with modern, relevant tech stacks."
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-stone-200 rounded-full flex items-center justify-center text-stone-500 font-bold text-xs">
+                  AS
+                </div>
+                <div>
+                  <div className="font-bold text-sm text-stone-900">Sarah A.</div>
+                  <div className="text-xs text-stone-500">Product Designer</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Review Card 3 */}
+            <div className="bg-white p-8 rounded-xl border border-orange-100 shadow-sm relative">
+              <Quote className="absolute top-6 right-6 text-orange-100" size={40} />
+              <div className="flex gap-1 text-orange-500 mb-6">
+                {[1,2,3,4,5].map((i) => ( <Star key={i} size={16} fill="currentColor" /> ))}
+              </div>
+              <p className="text-stone-700 mb-6 relative z-10">
+                "The platform performance is incredibly fast, and the dashboard makes tracking my certification progress satisfyingly simple."
+              </p>
+              <div className="flex items-center gap-4">
+                <div className="w-10 h-10 bg-stone-200 rounded-full flex items-center justify-center text-stone-500 font-bold text-xs">
+                  MK
+                </div>
+                <div>
+                  <div className="font-bold text-sm text-stone-900">Marcus K.</div>
+                  <div className="text-xs text-stone-500">DevOps Specialist</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* ================= 5. SYSTEM WORKFLOW ================= */}
       <section className="py-16 bg-white border-t border-stone-200">
         <div className="container mx-auto px-4 max-w-6xl">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
